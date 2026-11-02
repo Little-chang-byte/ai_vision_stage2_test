@@ -1,7 +1,7 @@
 image_id,path,source,scene,notes
-1,data/images/17da3cf73d5e2025e277b66a267290f5.jpg,user-provided,desktop,local test image
-2,data/images/76377977d9a75902f4e736c2bd920a30.jpg,user-provided,desktop,local test image
-3,data/images/960723767fcfd5c47f6f80e7414cc506.jpg,user-provided,desktop,local test image
-4,data/images/a50068077d27de22d4a7ef3b1883a696.jpg,user-provided,desktop,local test image
-5,data/images/e01e756748838fca0a0a73aef3a136f7.jpg,user-provided,desktop,local test image
-6,data/images/e428765c566c53ea96a7936d40817f90.jpg,user-provided,desktop,local test image
+D001,data/images/17da3cf73d5e2025e277b66a267290f5.jpg,个人拍摄,书本与鼠标,桌面木纹背景；可见书本、鼠标、耳机盒和水杯；未人工标注
+D002,data/images/76377977d9a75902f4e736c2bd920a30.jpg,个人拍摄,书本与鼠标,桌面木纹背景；可见书本、鼠标、耳机盒和收纳盒；未人工标注
+D003,data/images/960723767fcfd5c47f6f80e7414cc506.jpg,个人拍摄,书本与鼠标,桌面木纹背景；书本上放置收纳盒和鼠标；未人工标注
+D004,data/images/a50068077d27de22d4a7ef3b1883a696.jpg,个人拍摄,书本与文具,竖拍；可见书本、笔记本和文具；未人工标注
+D005,data/images/e01e756748838fca0a0a73aef3a136f7.jpg,个人拍摄,书本与文具,可见书本、彩笔和小型物品；未人工标注
+D006,data/images/e428765c566c53ea96a7936d40817f90.jpg,个人拍摄,平板键盘与鼠标,可见平板、键盘和鼠标；未人工标注
