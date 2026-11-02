@@ -1,4 +1,7 @@
 image_id,path,source,scene,notes
-001,data/images/test.jpg,matplotlib sample,portrait,existing local sample for pipeline verification
-002,data/images/bus.jpg,Ultralytics bundled asset,street,real bundled image; replace with licensed desktop photo
-003,data/images/zidane.jpg,Ultralytics bundled asset,street,real bundled image; replace with licensed desktop photo
+1,data/images/17da3cf73d5e2025e277b66a267290f5.jpg,user-provided,desktop,local test image
+2,data/images/76377977d9a75902f4e736c2bd920a30.jpg,user-provided,desktop,local test image
+3,data/images/960723767fcfd5c47f6f80e7414cc506.jpg,user-provided,desktop,local test image
+4,data/images/a50068077d27de22d4a7ef3b1883a696.jpg,user-provided,desktop,local test image
+5,data/images/e01e756748838fca0a0a73aef3a136f7.jpg,user-provided,desktop,local test image
+6,data/images/e428765c566c53ea96a7936d40817f90.jpg,user-provided,desktop,local test image
