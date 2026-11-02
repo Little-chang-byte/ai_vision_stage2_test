@@ -12,3 +12,9 @@
 - 输出：`results/traditional/001.json` 与 `results/traditional/001.jpg`。
 - 实际识别：person 1、tie 1；运行耗时约 3.9403 秒。
 - VLM 尚未运行：当前未发现 API Key，未生成模拟结果。
+# 2026-11-02 P0 progress
+- Added `data/manifest.csv` with three locally available image assets. Two are Ultralytics bundled street images; they are pipeline fixtures, not desktop-scene evidence, and must be replaced with licensed desktop photos before final submission.
+- Refactored YOLO into reusable `YoloDetector`, added path validation and model reuse.
+- Added batch manifest entry point and comparison JSON/CSV/analysis files.
+- Added static YOLO search MVP with Chinese aliases and real bounding-box visualization.
+- VLM remains unverified because no API key is present; no simulated result was generated.
