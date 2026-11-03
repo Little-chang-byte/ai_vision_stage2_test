@@ -18,3 +18,8 @@
 - Added batch manifest entry point and comparison JSON/CSV/analysis files.
 - Added static YOLO search MVP with Chinese aliases and real bounding-box visualization.
 - VLM remains unverified because no API key is present; no simulated result was generated.
+## 2026-11-03 Qwen3-VL 修复验证
+- 通过 Ollama 原生 `/api/chat` 接口发送原始图片，设置 `stream=false`、`think=false`、`format=json`。
+- 单张 D001 真实返回结构化 JSON 成功。
+- 完整 manifest 6 张：D001、D004、D006 成功；D002、D003、D005 返回空/无效 JSON，标记为 error，保留 raw 响应。
+- comparison 状态已修复为 verified/error/not_run/blocked 语义。
