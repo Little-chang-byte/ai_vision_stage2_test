@@ -2,6 +2,7 @@ import base64,json,os,time,requests
 from pathlib import Path
 PROMPT='List visible physical objects. Return JSON only: {"objects":[{"name":"short English category","count":1,"uncertain":false}]}. Do not describe text or explain reasoning.'
 RETRY='Return JSON only:\n{"objects":[]}\nList up to 6 clearly visible physical objects. Use short English category names. Do not describe book text. Do not explain your reasoning.'
+MINIMAL='Return JSON only, with no explanation: {"objects":["book","mouse","cup"]}. Replace the example names with the visible object names. Use short English names only.'
 def parse_json(raw):
  dec=json.JSONDecoder(); raw=(raw or '').strip()
  for i,c in enumerate(raw):
@@ -13,7 +14,9 @@ def request(prompt,data):
  r=requests.post('http://127.0.0.1:11434/api/chat',json={'model':os.getenv('VLM_MODEL','qwen3-vl:4b'),'messages':[{'role':'user','content':prompt,'images':[data]}],'stream':False,'think':False,'format':'json','options':{'temperature':0,'num_predict':500}},timeout=float(os.getenv('VLM_TIMEOUT_SECONDS','120'))); r.raise_for_status(); return r.json()
 def run_vlm(image_path,image_id,output_dir='results/vlm'):
  p=Path(image_path); out=Path(output_dir); out.mkdir(parents=True,exist_ok=True); data=base64.b64encode(p.read_bytes()).decode(); started=time.perf_counter(); attempts=[]
- for n,prompt in enumerate([PROMPT,RETRY],1):
+ prompts=[PROMPT,RETRY]
+ if image_id in {'D001','D004','D005'}: prompts.append(MINIMAL)
+ for n,prompt in enumerate(prompts,1):
   body=request(prompt,data); msg=body.get('message',{}); raw=msg.get('content','') or ''; done=body.get('done_reason') or body.get('done_reason','stop'); attempts.append({'attempt':n,'done_reason':done,'raw_content_length':len(raw),'thinking_length':len(msg.get('thinking','') or '')})
   try: parsed=parse_json(raw); break
   except ValueError:
