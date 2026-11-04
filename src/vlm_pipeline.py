@@ -1,32 +1,96 @@
-import base64,json,os,time,requests
+import base64, json, os, time
+from collections import OrderedDict
 from pathlib import Path
-PROMPT='List visible physical objects. Return JSON only: {"objects":[{"name":"short English category","count":1,"uncertain":false}]}. Do not describe text or explain reasoning.'
-RETRY='Return JSON only:\n{"objects":[]}\nList up to 6 clearly visible physical objects. Use short English category names. Do not describe book text. Do not explain your reasoning.'
-MINIMAL='Return JSON only, with no explanation: {"objects":["book","mouse","cup"]}. Replace the example names with the visible object names. Use short English names only.'
+import requests
+
+PROMPT = 'List visible physical objects. Return JSON only: {"objects":[{"name":"short English category","count":1,"uncertain":false}]}. Do not describe text or explain reasoning.'
+RETRY_PROMPT = 'Return JSON only: {"objects":[{"name":"object","count":1,"uncertain":false}]}. List clearly visible physical objects. Do not explain reasoning.'
+MAX_RETRIES = int(os.getenv("VLM_MAX_RETRIES", "2"))
+RETRY_BACKOFF_SECONDS = float(os.getenv("VLM_RETRY_BACKOFF_SECONDS", "1"))
+RETRYABLE_ERRORS = {"VLM_EMPTY_RESPONSE", "VLM_INVALID_JSON", "VLM_INCOMPLETE_RESPONSE", "VLM_SCHEMA_VALIDATION_FAILED", "VLM_INVALID_COUNT", "VLM_MISSING_REQUIRED_FIELD"}
+
+ALIASES = {"computer mouse": "mouse", "wireless mouse": "mouse", "鼠标": "mouse", "键盘": "keyboard", "耳机盒": "earbuds case", "充电宝": "power bank", "书": "book", "教材": "book", "保温杯": "cup"}
+
+def normalize_name(name):
+    if not isinstance(name, str) or not name.strip():
+        raise ValueError("VLM_INVALID_NAME")
+    clean = " ".join(name.strip().lower().split())
+    return ALIASES.get(clean, clean)
+
+def aggregate_objects(objects):
+    totals = OrderedDict()
+    merged = OrderedDict()
+    for item in objects:
+        if isinstance(item, str):
+            name, count, uncertain = normalize_name(item), 1, False
+        elif isinstance(item, dict):
+            if "name" not in item or "count" not in item:
+                raise ValueError("VLM_MISSING_REQUIRED_FIELD")
+            name, count = normalize_name(item["name"]), item["count"]
+            if isinstance(count, bool) or not isinstance(count, int) or count <= 0:
+                raise ValueError("VLM_INVALID_COUNT")
+            uncertain = bool(item.get("uncertain", False))
+        else:
+            raise ValueError("VLM_SCHEMA_VALIDATION_FAILED")
+        totals[name] = totals.get(name, 0) + count
+        merged[name] = {"name": name, "count": totals[name], "uncertain": bool(merged.get(name, {}).get("uncertain", False) or uncertain)}
+    return list(merged.values()), dict(totals)
+
+def validate_payload(parsed):
+    if not isinstance(parsed, dict) or "objects" not in parsed or not isinstance(parsed["objects"], list):
+        raise ValueError("VLM_SCHEMA_VALIDATION_FAILED" if isinstance(parsed, dict) else "VLM_SCHEMA_VALIDATION_FAILED")
+    objects, counts = aggregate_objects(parsed["objects"])
+    return objects, counts
+
 def parse_json(raw):
- dec=json.JSONDecoder(); raw=(raw or '').strip()
- for i,c in enumerate(raw):
-  if c=='{':
-   try:return dec.raw_decode(raw[i:])[0]
-   except json.JSONDecodeError: pass
- raise ValueError('VLM_EMPTY_OR_INVALID_JSON')
-def request(prompt,data):
- r=requests.post('http://127.0.0.1:11434/api/chat',json={'model':os.getenv('VLM_MODEL','qwen3-vl:4b'),'messages':[{'role':'user','content':prompt,'images':[data]}],'stream':False,'think':False,'format':'json','options':{'temperature':0,'num_predict':500}},timeout=float(os.getenv('VLM_TIMEOUT_SECONDS','120'))); r.raise_for_status(); return r.json()
-def run_vlm(image_path,image_id,output_dir='results/vlm'):
- p=Path(image_path); out=Path(output_dir); out.mkdir(parents=True,exist_ok=True); data=base64.b64encode(p.read_bytes()).decode(); started=time.perf_counter(); attempts=[]
- prompts=[PROMPT,RETRY]
- if image_id in {'D001','D004','D005'}: prompts.append(MINIMAL)
- for n,prompt in enumerate(prompts,1):
-  body=request(prompt,data); msg=body.get('message',{}); raw=msg.get('content','') or ''; done=body.get('done_reason') or body.get('done_reason','stop'); attempts.append({'attempt':n,'done_reason':done,'raw_content_length':len(raw),'thinking_length':len(msg.get('thinking','') or '')})
-  try: parsed=parse_json(raw); break
-  except ValueError:
-   parsed=None
- if parsed is None:
-  payload={'image_id':image_id,'method':'VLM','model':body.get('model'),'objects':[],'counts':{},'runtime_seconds':round(time.perf_counter()-started,4),'done_reason':attempts[-1]['done_reason'],'raw_content_length':attempts[-1]['raw_content_length'],'error':'MAX_OUTPUT_REACHED' if attempts[-1]['done_reason']=='length' else 'VLM_EMPTY_OR_INVALID_JSON','attempts':attempts}
-  json.dump(body,open(out/f'{image_id}_raw.json','w',encoding='utf-8'),ensure_ascii=False,indent=2); json.dump(payload,open(out/f'{image_id}.json','w',encoding='utf-8'),ensure_ascii=False,indent=2); return payload
- objs=[]
- for x in parsed.get('objects',[]):
-  if isinstance(x,str): objs.append({'name':x,'count':1,'uncertain':False})
-  else: objs.append({'name':x.get('name','unknown'),'count':x.get('count',1),'uncertain':bool(x.get('uncertain',False))})
- payload={'image_id':image_id,'method':'VLM','model':body.get('model'),'objects':objs,'counts':{o['name']:o['count'] for o in objs},'runtime_seconds':round(time.perf_counter()-started,4),'done_reason':attempts[-1]['done_reason'],'raw_content_length':attempts[-1]['raw_content_length'],'error':None,'attempts':attempts}
- json.dump(body,open(out/f'{image_id}_raw.json','w',encoding='utf-8'),ensure_ascii=False,indent=2); json.dump(payload,open(out/f'{image_id}.json','w',encoding='utf-8'),ensure_ascii=False,indent=2); return payload
+    if not isinstance(raw, str) or not raw.strip():
+        raise ValueError("VLM_EMPTY_RESPONSE")
+    try:
+        parsed = json.loads(raw)
+    except json.JSONDecodeError as exc:
+        raise ValueError("VLM_INVALID_JSON") from exc
+    return parsed
+
+def request(prompt, data):
+    response = requests.post("http://127.0.0.1:11434/api/chat", json={"model": os.getenv("VLM_MODEL", "qwen3-vl:4b"), "messages": [{"role": "user", "content": prompt, "images": [data]}], "stream": False, "think": False, "format": "json", "options": {"temperature": 0, "num_predict": 500}}, timeout=float(os.getenv("VLM_TIMEOUT_SECONDS", "120")))
+    response.raise_for_status()
+    return response.json()
+
+def _failure(image_id, body, attempts, started, error):
+    return {"image_id": image_id, "method": "VLM", "model": (body or {}).get("model"), "objects": [], "counts": {}, "runtime_seconds": round(time.perf_counter() - started, 4), "done_reason": (body or {}).get("done_reason"), "raw_content_length": len(((body or {}).get("message") or {}).get("content") or ""), "error": error, "attempts": attempts}
+
+def run_vlm(image_path, image_id, output_dir="results/vlm"):
+    path, out = Path(image_path), Path(output_dir)
+    if not path.is_file():
+        return _failure(image_id, {}, [], time.perf_counter(), "VLM_IMAGE_NOT_FOUND")
+    out.mkdir(parents=True, exist_ok=True)
+    data, started, attempts, body = base64.b64encode(path.read_bytes()).decode(), time.perf_counter(), [], {}
+    for attempt in range(1, MAX_RETRIES + 2):
+        try:
+            body = request(PROMPT if attempt == 1 else RETRY_PROMPT, data)
+            message = body.get("message")
+            raw = message.get("content") if isinstance(message, dict) else None
+            done_reason = body.get("done_reason")
+            done = body.get("done")
+            if not isinstance(message, dict) or not isinstance(raw, str) or not raw.strip():
+                raise ValueError("VLM_EMPTY_RESPONSE")
+            if done is not True or done_reason not in (None, "stop"):
+                raise ValueError("VLM_INCOMPLETE_RESPONSE" if done_reason != "length" else "MAX_OUTPUT_REACHED")
+            parsed = parse_json(raw)
+            objects, counts = validate_payload(parsed)
+            attempts.append({"attempt": attempt, "status": "verified", "error_type": None, "done_reason": done_reason, "raw_content_length": len(raw)})
+            payload = {"image_id": image_id, "method": "VLM", "model": body.get("model"), "objects": objects, "counts": counts, "runtime_seconds": round(time.perf_counter()-started, 4), "done_reason": done_reason, "raw_content_length": len(raw), "error": None, "attempts": attempts}
+            break
+        except requests.RequestException as exc:
+            error = "VLM_REQUEST_FAILED"; attempts.append({"attempt": attempt, "status": "error", "error_type": error, "detail": str(exc)})
+        except ValueError as exc:
+            error = str(exc); attempts.append({"attempt": attempt, "status": "error", "error_type": error, "done_reason": body.get("done_reason"), "raw_content_length": len(((body.get("message") or {}).get("content") or ""))})
+        if attempt > MAX_RETRIES or error not in RETRYABLE_ERRORS and error != "MAX_OUTPUT_REACHED":
+            payload = _failure(image_id, body, attempts, started, error)
+            break
+        time.sleep(RETRY_BACKOFF_SECONDS)
+    with open(out / f"{image_id}_raw.json", "w", encoding="utf-8") as raw_file:
+        json.dump(body, raw_file, ensure_ascii=False, indent=2)
+    with open(out / f"{image_id}.json", "w", encoding="utf-8") as result_file:
+        json.dump(payload, result_file, ensure_ascii=False, indent=2)
+    return payload
