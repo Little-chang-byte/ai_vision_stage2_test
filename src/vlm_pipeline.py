@@ -21,9 +21,7 @@ def aggregate_objects(objects):
     totals = OrderedDict()
     merged = OrderedDict()
     for item in objects:
-        if isinstance(item, str):
-            name, count, uncertain = normalize_name(item), 1, False
-        elif isinstance(item, dict):
+        if isinstance(item, dict):
             if "name" not in item or "count" not in item:
                 raise ValueError("VLM_MISSING_REQUIRED_FIELD")
             name, count = normalize_name(item["name"]), item["count"]
@@ -35,6 +33,25 @@ def aggregate_objects(objects):
         totals[name] = totals.get(name, 0) + count
         merged[name] = {"name": name, "count": totals[name], "uncertain": bool(merged.get(name, {}).get("uncertain", False) or uncertain)}
     return list(merged.values()), dict(totals)
+
+def validate_result_record(result):
+    if not isinstance(result, dict):
+        raise ValueError("VLM_RESULT_SCHEMA_VALIDATION_FAILED")
+    required = {"image_id", "method", "model", "objects", "counts", "runtime_seconds", "done", "done_reason", "error", "attempts"}
+    if not required.issubset(result):
+        raise ValueError("VLM_RESULT_MISSING_REQUIRED_FIELD")
+    if result["method"] != "VLM" or not isinstance(result["image_id"], str):
+        raise ValueError("VLM_RESULT_SCHEMA_VALIDATION_FAILED")
+    if result["error"] is not None or result["done"] is not True or result["done_reason"] not in (None, "stop"):
+        raise ValueError("VLM_RESULT_NOT_VERIFIED")
+    if not isinstance(result["objects"], list) or not isinstance(result["counts"], dict):
+        raise ValueError("VLM_RESULT_SCHEMA_VALIDATION_FAILED")
+    objects, counts = aggregate_objects(result["objects"])
+    if counts != result["counts"] or objects != result["objects"]:
+        raise ValueError("VLM_RESULT_COUNTS_MISMATCH")
+    if not isinstance(result["attempts"], list) or not result["attempts"]:
+        raise ValueError("VLM_RESULT_MISSING_REQUIRED_FIELD")
+    return True
 
 def validate_payload(parsed):
     if not isinstance(parsed, dict) or "objects" not in parsed or not isinstance(parsed["objects"], list):
@@ -57,7 +74,7 @@ def request(prompt, data):
     return response.json()
 
 def _failure(image_id, body, attempts, started, error):
-    return {"image_id": image_id, "method": "VLM", "model": (body or {}).get("model"), "objects": [], "counts": {}, "runtime_seconds": round(time.perf_counter() - started, 4), "done_reason": (body or {}).get("done_reason"), "raw_content_length": len(((body or {}).get("message") or {}).get("content") or ""), "error": error, "attempts": attempts}
+    return {"image_id": image_id, "method": "VLM", "model": (body or {}).get("model"), "objects": [], "counts": {}, "runtime_seconds": round(time.perf_counter() - started, 4), "done": (body or {}).get("done"), "done_reason": (body or {}).get("done_reason"), "raw_content_length": len(((body or {}).get("message") or {}).get("content") or ""), "error": error, "attempts": attempts}
 
 def run_vlm(image_path, image_id, output_dir="results/vlm"):
     path, out = Path(image_path), Path(output_dir)
@@ -79,7 +96,8 @@ def run_vlm(image_path, image_id, output_dir="results/vlm"):
             parsed = parse_json(raw)
             objects, counts = validate_payload(parsed)
             attempts.append({"attempt": attempt, "status": "verified", "error_type": None, "done_reason": done_reason, "raw_content_length": len(raw)})
-            payload = {"image_id": image_id, "method": "VLM", "model": body.get("model"), "objects": objects, "counts": counts, "runtime_seconds": round(time.perf_counter()-started, 4), "done_reason": done_reason, "raw_content_length": len(raw), "error": None, "attempts": attempts}
+            payload = {"image_id": image_id, "method": "VLM", "model": body.get("model"), "objects": objects, "counts": counts, "runtime_seconds": round(time.perf_counter()-started, 4), "done": done, "done_reason": done_reason, "raw_content_length": len(raw), "error": None, "attempts": attempts}
+            validate_result_record(payload)
             break
         except requests.RequestException as exc:
             error = "VLM_REQUEST_FAILED"; attempts.append({"attempt": attempt, "status": "error", "error_type": error, "detail": str(exc)})
