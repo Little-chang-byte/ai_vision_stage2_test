@@ -1,26 +1,43 @@
-# AI 双方案桌面物品清点
+# README
 
-同一张图片分别使用 YOLO 目标检测和视觉大模型识别物品，并保存结构化结果。YOLO 可独立运行；VLM 需要真实 API Key。
+## AI 双方案桌面物品清点
 
-## 运行
+本项目使用同一批原始桌面图片，分别运行 YOLO 传统目标检测和 Ollama + Qwen3-VL 4B 视觉语言模型，输出结构化结果并进行比较。六张正式图片为 D001-D006，图片来源和路径记录在 `data/manifest.csv`。
+
+## 环境配置
+
+复制或参考 `.env.example` 创建 `.env`：
+
+```dotenv
+VLM_API_KEY=ollama
+VLM_BASE_URL=http://127.0.0.1:11434/v1
+VLM_MODEL=qwen3-vl:4b
+```
+
+`.env` 已被 `.gitignore` 忽略，不应提交到 Git。程序实际调用 Ollama 原生视觉接口 `http://127.0.0.1:11434/api/chat`，读取同一模型名和本地服务配置。
+
+## 安装与运行
 
 ```powershell
-cd ai_vision_stage2
+cd D:\后端_test\ai_vision_stage2
 ..\project\.venv-codex-pytorch\Scripts\python.exe -m pip install -r requirements.txt
-..\project\.venv-codex-pytorch\Scripts\python.exe src/main.py --image data/images/test.jpg --image-id 001 --skip-vlm
+..\project\.venv-codex-pytorch\Scripts\python.exe src\main.py --manifest data\manifest.csv
 ```
 
-配置 `.env` 后执行不带 `--skip-vlm` 的命令即可进行真实多模态调用。结果位于 `results/traditional/` 和 `results/vlm/`。
-## 批量运行
+只验证 YOLO 时可使用 `--skip-vlm`。单图调试示例：
 
 ```powershell
-..\project\.venv-codex-pytorch\Scripts\python.exe src\main.py --manifest data\manifest.csv --skip-vlm
+..\project\.venv-codex-pytorch\Scripts\python.exe src\main.py --image data\images\e01e756748838fca0a0a73aef3a136f7.jpg --image-id D005
 ```
 
-输出：`results/traditional/`、`results/comparison/comparison.json`、`results/comparison/comparison.csv`。
+## 输出
 
-## 查找目标
+- `results/traditional/`：YOLO JSON、检测框图和运行记录。
+- `results/vlm/`：VLM 结构化结果、原始 Ollama 响应和重试元数据。
+- `results/comparison/comparison.json`、`comparison.csv`、`analysis.md`：双方案对比。
+- `docs/project_report.md`：项目说明和个人感悟草稿。
+- `docs/demo_script.md`：真实运行视频录制脚本。
 
-查找入口目前可通过 Python 调用 `src.search.search_yolo`，例如查询“公交车”。它使用真实 YOLO 边界框，不把 VLM 描述当作坐标。
+## 当前验收状态
 
-当前 manifest 中的素材用于管线验证；正式提交前必须替换为有授权的桌面物品图片。
+最近一次完整运行中 YOLO 6/6 成功，Qwen3-VL 5/6 返回合法 JSON；D005 因 `done_reason=length` 记录为 `MAX_OUTPUT_REACHED`。该失败没有被伪造成成功。详细记录见 `FINAL_DELIVERY_REPORT.md`、`docs/VLM_FAILURE_ANALYSIS.md` 和 `docs/VLM_REPAIR_REPORT.md`。

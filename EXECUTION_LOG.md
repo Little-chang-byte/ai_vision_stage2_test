@@ -23,3 +23,11 @@
 - 单张 D001 真实返回结构化 JSON 成功。
 - 完整 manifest 6 张：D001、D004、D006 成功；D002、D003、D005 返回空/无效 JSON，标记为 error，保留 raw 响应。
 - comparison 状态已修复为 verified/error/not_run/blocked 语义。
+
+## 2026-11-04 最终接管复验
+
+- 使用命令 `..\project\.venv-codex-pytorch\Scripts\python.exe src\main.py --manifest data\manifest.csv` 完整运行 D001-D006。
+- YOLO 6/6 完成；Ollama `qwen3-vl:4b` 请求 6/6 发出。
+- VLM 合法 JSON：D001、D002、D003、D004、D006；D005 为 `MAX_OUTPUT_REACHED`，`done_reason=length`。
+- 所有 VLM 原始响应和重试元数据保存在 `results/vlm/`；比较文件已重新生成。
+- 两种管线均从 manifest 读取同一原始图片路径；未使用模拟结果。
