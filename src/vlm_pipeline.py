@@ -69,7 +69,10 @@ def parse_json(raw):
     return parsed
 
 def request(prompt, data):
-    response = requests.post("http://127.0.0.1:11434/api/chat", json={"model": os.getenv("VLM_MODEL", "qwen3-vl:4b"), "messages": [{"role": "user", "content": prompt, "images": [data]}], "stream": False, "think": False, "format": "json", "options": {"temperature": 0, "num_predict": 500}}, timeout=float(os.getenv("VLM_TIMEOUT_SECONDS", "120")))
+    base_url = os.getenv("OLLAMA_BASE_URL", "http://127.0.0.1:11434").rstrip("/")
+    if not base_url:
+        raise RuntimeError("OLLAMA_BASE_URL is not configured")
+    response = requests.post(f"{base_url}/api/chat", json={"model": os.getenv("VLM_MODEL", "qwen3-vl:4b"), "messages": [{"role": "user", "content": prompt, "images": [data]}], "stream": False, "think": False, "format": "json", "options": {"temperature": 0, "num_predict": 500}}, timeout=float(os.getenv("VLM_TIMEOUT_SECONDS", "120")))
     response.raise_for_status()
     return response.json()
 

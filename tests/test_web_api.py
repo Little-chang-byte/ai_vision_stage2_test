@@ -11,6 +11,8 @@ from src import web_app
 
 
 client = TestClient(web_app.app)
+web_app.JWT_SECRET = "test-secret-with-more-than-32-bytes"
+web_app.DEMO_PASSWORD_HASH = web_app.hash_password("stage3-demo")
 
 
 def token():
@@ -41,3 +43,11 @@ class WebApiTests(unittest.TestCase):
         self.assertEqual(body["image_sha256"], uploaded["image_sha256"])
         self.assertEqual(body["yolo"]["counts"], {"mouse": 2})
         self.assertEqual(body["vlm"]["counts"], {"mouse": 2})
+
+    def test_server_rejects_tampered_hash_and_paths(self):
+        headers = {"Authorization": f"Bearer {token()}"}
+        upload = client.post("/api/upload", headers=headers, files={"file": ("same.jpg", b"immutable", "image/jpeg")}).json()
+        forged = dict(upload, image_sha256="0" * 64)
+        self.assertEqual(client.post("/api/compare", headers=headers, json=forged).status_code, 400)
+        outside = {"image_path": str(Path(__file__).resolve()), "image_sha256": ""}
+        self.assertEqual(client.post("/api/compare", headers=headers, json=outside).status_code, 400)

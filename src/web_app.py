@@ -1,4 +1,6 @@
 import hashlib
+import hmac
+import json
 import os
 import secrets
 import time
@@ -10,7 +12,7 @@ import jwt
 from fastapi import BackgroundTasks, Depends, FastAPI, File, HTTPException, UploadFile
 from fastapi.responses import HTMLResponse
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
-from sqlalchemy import DateTime, Integer, String, Text, create_engine, select
+from sqlalchemy import DateTime, Integer, String, Text, create_engine, inspect, select, text
 from sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column, sessionmaker
 
 try:
@@ -19,6 +21,12 @@ try:
 except ImportError:
     from traditional_pipeline import YoloDetector
     from vlm_pipeline import run_vlm
+try:
+    from .comparison import compare_row
+    from .vlm_pipeline import validate_result_record
+except ImportError:
+    from comparison import compare_row
+    from vlm_pipeline import validate_result_record
 
 ROOT = Path(__file__).resolve().parents[1]
 UPLOAD_DIR = ROOT / "data" / "uploads"
@@ -26,9 +34,9 @@ RESULT_DIR = ROOT / "results" / "web"
 UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
 RESULT_DIR.mkdir(parents=True, exist_ok=True)
 DATABASE_URL = os.getenv("DATABASE_URL", f"sqlite:///{ROOT / 'data' / 'stage3.db'}")
-JWT_SECRET = os.getenv("JWT_SECRET", "stage3-local-secret-change-me-32-bytes")
+JWT_SECRET = os.getenv("JWT_SECRET", "")
 DEMO_USER = os.getenv("DEMO_USER", "teacher")
-DEMO_PASSWORD = os.getenv("DEMO_PASSWORD", "stage3-demo")
+DEMO_PASSWORD_HASH = os.getenv("DEMO_PASSWORD_HASH", "")
 engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False} if DATABASE_URL.startswith("sqlite") else {})
 SessionLocal = sessionmaker(bind=engine, expire_on_commit=False)
 
@@ -47,11 +55,15 @@ class Task(Base):
     vlm_status: Mapped[str] = mapped_column(String(32), default="pending")
     yolo_result: Mapped[str | None] = mapped_column(Text, nullable=True)
     vlm_result: Mapped[str | None] = mapped_column(Text, nullable=True)
+    comparison_result: Mapped[str | None] = mapped_column(Text, nullable=True)
     error: Mapped[str | None] = mapped_column(Text, nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
 
 
 Base.metadata.create_all(engine)
+if "comparison_result" not in {column["name"] for column in inspect(engine).get_columns("tasks")}:
+    with engine.begin() as connection:
+        connection.execute(text("ALTER TABLE tasks ADD COLUMN comparison_result TEXT"))
 app = FastAPI(title="AI 双方案视觉对比", version="3.0.0")
 bearer = HTTPBearer(auto_error=False)
 
@@ -60,6 +72,8 @@ def auth(credentials: HTTPAuthorizationCredentials | None = Depends(bearer)):
     if not credentials:
         raise HTTPException(401, "需要登录")
     try:
+        if not JWT_SECRET:
+            raise HTTPException(503, "JWT_SECRET 未配置")
         return jwt.decode(credentials.credentials, JWT_SECRET, algorithms=["HS256"])
     except jwt.PyJWTError as exc:
         raise HTTPException(401, "Token 无效或已过期") from exc
@@ -74,19 +88,26 @@ def run_task(task_id: str):
         db.commit()
         try:
             yolo = YoloDetector().detect(task.image_path, task_id, str(RESULT_DIR))
-            task.yolo_result = __import__("json").dumps(yolo, ensure_ascii=False)
+            task.yolo_result = json.dumps(yolo, ensure_ascii=False)
             task.yolo_status = "success"
         except Exception as exc:
             task.yolo_status, task.error = "failed", f"YOLO: {exc}"
         db.commit()
         try:
             vlm = run_vlm(task.image_path, task_id, str(RESULT_DIR / "vlm"))
-            task.vlm_result = __import__("json").dumps(vlm, ensure_ascii=False)
-            task.vlm_status = "success" if not vlm.get("error") else "failed"
+            task.vlm_result = json.dumps(vlm, ensure_ascii=False)
+            try:
+                validate_result_record(vlm)
+                task.vlm_status = "success"
+            except ValueError as exc:
+                task.vlm_status = "failed"
+                task.error = (task.error + " | " if task.error else "") + f"VLM validation: {exc}"
             if vlm.get("error"):
                 task.error = (task.error + " | " if task.error else "") + f"VLM: {vlm['error']}"
         except Exception as exc:
             task.vlm_status, task.error = "failed", (task.error + " | " if task.error else "") + f"VLM: {exc}"
+        if task.yolo_result and task.vlm_result:
+            task.comparison_result = json.dumps(compare_row(task.id, json.loads(task.yolo_result), json.loads(task.vlm_result)), ensure_ascii=False)
         task.status = "success" if task.yolo_status == task.vlm_status == "success" else "partial_success" if "success" in {task.yolo_status, task.vlm_status} else "failed"
         db.commit()
 
@@ -98,7 +119,9 @@ def health():
 
 @app.post("/api/auth/login")
 def login(payload: dict):
-    if not secrets.compare_digest(str(payload.get("username", "")), DEMO_USER) or not secrets.compare_digest(str(payload.get("password", "")), DEMO_PASSWORD):
+    if not JWT_SECRET or not DEMO_PASSWORD_HASH:
+        raise HTTPException(503, "JWT_SECRET 和 DEMO_PASSWORD_HASH 必须配置")
+    if not secrets.compare_digest(str(payload.get("username", "")), DEMO_USER) or not verify_password(str(payload.get("password", "")), DEMO_PASSWORD_HASH):
         raise HTTPException(401, "用户名或密码错误")
     token = jwt.encode({"sub": DEMO_USER, "exp": datetime.now(timezone.utc) + timedelta(hours=8)}, JWT_SECRET, algorithm="HS256")
     return {"access_token": token, "token_type": "bearer"}
@@ -124,8 +147,12 @@ def compare(payload: dict, tasks: BackgroundTasks, _: dict = Depends(auth)):
     path = Path(str(payload.get("image_path", ""))).resolve()
     if not path.is_file() or UPLOAD_DIR.resolve() not in path.parents:
         raise HTTPException(400, "请先上传有效图片")
+    actual_sha = hashlib.sha256(path.read_bytes()).hexdigest()
+    claimed_sha = str(payload.get("image_sha256", ""))
+    if claimed_sha and not hmac.compare_digest(claimed_sha, actual_sha):
+        raise HTTPException(400, "图片哈希校验失败")
     task_id = str(uuid.uuid4())
-    task = Task(id=task_id, image_path=str(path), image_sha256=str(payload.get("image_sha256", "")))
+    task = Task(id=task_id, image_path=str(path), image_sha256=actual_sha)
     with SessionLocal() as db:
         db.add(task)
         db.commit()
@@ -135,7 +162,24 @@ def compare(payload: dict, tasks: BackgroundTasks, _: dict = Depends(auth)):
 
 def task_view(task: Task):
     import json
-    return {"task_id": task.id, "status": task.status, "image_sha256": task.image_sha256, "yolo_status": task.yolo_status, "vlm_status": task.vlm_status, "yolo": json.loads(task.yolo_result) if task.yolo_result else None, "vlm": json.loads(task.vlm_result) if task.vlm_result else None, "error": task.error, "created_at": task.created_at.isoformat()}
+    return {"task_id": task.id, "status": task.status, "image_sha256": task.image_sha256, "yolo_status": task.yolo_status, "vlm_status": task.vlm_status, "yolo": json.loads(task.yolo_result) if task.yolo_result else None, "vlm": json.loads(task.vlm_result) if task.vlm_result else None, "comparison": json.loads(task.comparison_result) if task.comparison_result else None, "error": task.error, "created_at": task.created_at.isoformat()}
+
+
+def hash_password(password: str) -> str:
+    salt = secrets.token_bytes(16)
+    digest = hashlib.pbkdf2_hmac("sha256", password.encode(), salt, 310000)
+    return f"pbkdf2_sha256$310000${salt.hex()}${digest.hex()}"
+
+
+def verify_password(password: str, encoded: str) -> bool:
+    try:
+        scheme, iterations, salt_hex, digest_hex = encoded.split("$", 3)
+        if scheme != "pbkdf2_sha256":
+            return False
+        actual = hashlib.pbkdf2_hmac("sha256", password.encode(), bytes.fromhex(salt_hex), int(iterations))
+        return hmac.compare_digest(actual.hex(), digest_hex)
+    except (ValueError, TypeError):
+        return False
 
 
 @app.get("/api/tasks/{task_id}")
