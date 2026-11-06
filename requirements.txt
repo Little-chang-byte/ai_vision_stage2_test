@@ -5,4 +5,7 @@ python-dotenv
 openai
 fastapi
 uvicorn
+SQLAlchemy
+PyJWT
+python-multipart
 
