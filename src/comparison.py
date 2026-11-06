@@ -1,6 +1,9 @@
 import csv,json
 from pathlib import Path
-from vlm_pipeline import validate_result_record
+try:
+ from .vlm_pipeline import validate_result_record
+except ImportError:
+ from vlm_pipeline import validate_result_record
 
 def compare_row(image_id,traditional,vlm=None):
  status, error = "not_run", None
