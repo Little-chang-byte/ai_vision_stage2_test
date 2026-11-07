@@ -3,13 +3,38 @@ from pathlib import Path
 import sys
 import tempfile
 import unittest
+from unittest.mock import patch
+import os
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 import vlm_pipeline as v
+from traditional_pipeline import validate_yolo_result
 from comparison import compare_row, save_comparison
 
 VALID_YOLO={"method":"YOLO","model":"test","objects":[],"counts":{},"runtime_seconds":0.1,"error":None}
 
 class VlmRegressionTests(unittest.TestCase):
+    def test_yolo_schema_validation(self):
+        valid = {"method":"YOLO","model":"test","objects":[],"counts":{},"runtime_seconds":0.1,"error":None}
+        self.assertTrue(validate_yolo_result(valid))
+        detection = {"method":"YOLO","model":"test","objects":[{"name":"mouse","count":1,"confidence":0.9,"bbox":[0,0,1,1]}],"counts":{"mouse":1},"runtime_seconds":0.1,"error":None}
+        self.assertTrue(validate_yolo_result(detection))
+        for bad in [dict(detection, counts={}), dict(detection, objects=[{"name":"mouse","count":1,"confidence":2,"bbox":[0,0,1,1]}]), dict(detection, objects=[{"name":"mouse","count":1,"confidence":0.9,"bbox":[0,0,float('nan'),1]}])]:
+            with self.assertRaises(ValueError): validate_yolo_result(bad)
+
+    def test_ollama_base_url_is_configurable(self):
+        old = os.environ.get("OLLAMA_BASE_URL")
+        calls = []
+        class Response:
+            def raise_for_status(self): pass
+            def json(self): return {"ok": True}
+        try:
+            os.environ["OLLAMA_BASE_URL"] = "http://example.test///"
+            with patch.object(v.requests, "post", side_effect=lambda url, **kwargs: (calls.append(url) or Response())):
+                v.request("p", "data")
+            self.assertEqual(calls, ["http://example.test/api/chat"])
+        finally:
+            if old is None: os.environ.pop("OLLAMA_BASE_URL", None)
+            else: os.environ["OLLAMA_BASE_URL"] = old
     def test_duplicate_counts(self):
         self.assertEqual(v.aggregate_objects([{"name":"mouse","count":1},{"name":"mouse","count":1}])[1], {"mouse":2})
         self.assertEqual(v.aggregate_objects([{"name":"mouse","count":1},{"name":"mouse","count":2},{"name":"keyboard","count":1},{"name":"mouse","count":1}])[1], {"mouse":4,"keyboard":1})

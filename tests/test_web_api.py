@@ -2,6 +2,8 @@ import json
 import sys
 import unittest
 from unittest.mock import patch
+from datetime import datetime, timedelta, timezone
+import jwt
 from pathlib import Path
 
 from fastapi.testclient import TestClient
@@ -51,3 +53,17 @@ class WebApiTests(unittest.TestCase):
         self.assertEqual(client.post("/api/compare", headers=headers, json=forged).status_code, 400)
         outside = {"image_path": str(Path(__file__).resolve()), "image_sha256": ""}
         self.assertEqual(client.post("/api/compare", headers=headers, json=outside).status_code, 400)
+
+    def test_hash_is_required_and_jwt_subject_is_checked(self):
+        headers = {"Authorization": f"Bearer {token()}"}
+        upload = client.post("/api/upload", headers=headers, files={"file": ("same.jpg", b"required-hash", "image/jpeg")}).json()
+        missing = dict(upload); missing.pop("image_sha256")
+        self.assertEqual(client.post("/api/compare", headers=headers, json=missing).status_code, 400)
+        wrong = jwt.encode({"sub": "other", "exp": datetime.now(timezone.utc) + timedelta(hours=1)}, web_app.JWT_SECRET, algorithm="HS256")
+        self.assertEqual(client.get("/api/history", headers={"Authorization": f"Bearer {wrong}"}).status_code, 401)
+
+    def test_password_hash_rejects_malformed_parameters(self):
+        self.assertTrue(web_app.verify_password("stage3-demo", web_app.DEMO_PASSWORD_HASH))
+        self.assertFalse(web_app.verify_password("wrong", web_app.DEMO_PASSWORD_HASH))
+        for value in [None, "", "bad", "pbkdf2_sha512$310000$00$00", "pbkdf2_sha256$99$00$00", "pbkdf2_sha256$1000001$00$00", "pbkdf2_sha256$310000$zz$00"]:
+            self.assertFalse(web_app.verify_password("stage3-demo", value))

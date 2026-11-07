@@ -190,7 +190,7 @@ def verify_password(password: str, encoded: str) -> bool:
             return False
         actual = hashlib.pbkdf2_hmac("sha256", password.encode(), salt, int(iterations))
         return hmac.compare_digest(actual, digest)
-    except (ValueError, TypeError):
+    except (AttributeError, ValueError, TypeError):
         return False
 
 
