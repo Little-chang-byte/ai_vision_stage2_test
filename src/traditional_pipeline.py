@@ -1,7 +1,21 @@
-import json, time
+import json, time, math
 from pathlib import Path
 from collections import Counter
 from ultralytics import YOLO
+
+def validate_yolo_result(result):
+    if not isinstance(result, dict) or result.get("method") != "YOLO": raise ValueError("YOLO_RESULT_SCHEMA_VALIDATION_FAILED")
+    if not isinstance(result.get("model"), str) or not isinstance(result.get("objects"), list) or not isinstance(result.get("counts"), dict): raise ValueError("YOLO_RESULT_SCHEMA_VALIDATION_FAILED")
+    totals = Counter()
+    for item in result["objects"]:
+        if not isinstance(item, dict) or not isinstance(item.get("name"), str) or not item["name"].strip(): raise ValueError("YOLO_INVALID_OBJECT")
+        if item.get("count") != 1: raise ValueError("YOLO_INVALID_COUNT")
+        conf, bbox = item.get("confidence"), item.get("bbox")
+        if not isinstance(conf, (int, float)) or isinstance(conf, bool) or not math.isfinite(conf) or not 0 <= conf <= 1: raise ValueError("YOLO_INVALID_CONFIDENCE")
+        if not isinstance(bbox, list) or len(bbox) != 4 or any(not isinstance(x, (int, float)) or isinstance(x, bool) or not math.isfinite(x) for x in bbox): raise ValueError("YOLO_INVALID_BBOX")
+        totals[item["name"]] += 1
+    if result["counts"] != dict(totals): raise ValueError("YOLO_COUNTS_MISMATCH")
+    return True
 class YoloDetector:
     def __init__(self, model_name="yolo11n.pt"):
         self.model_name=model_name; self.model=YOLO(model_name)

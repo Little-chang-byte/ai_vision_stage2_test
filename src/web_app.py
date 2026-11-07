@@ -16,10 +16,10 @@ from sqlalchemy import DateTime, Integer, String, Text, create_engine, inspect, 
 from sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column, sessionmaker
 
 try:
-    from .traditional_pipeline import YoloDetector
+    from .traditional_pipeline import YoloDetector, validate_yolo_result
     from .vlm_pipeline import run_vlm
 except ImportError:
-    from traditional_pipeline import YoloDetector
+    from traditional_pipeline import YoloDetector, validate_yolo_result
     from vlm_pipeline import run_vlm
 try:
     from .comparison import compare_row
@@ -74,7 +74,9 @@ def auth(credentials: HTTPAuthorizationCredentials | None = Depends(bearer)):
     try:
         if not JWT_SECRET:
             raise HTTPException(503, "JWT_SECRET 未配置")
-        return jwt.decode(credentials.credentials, JWT_SECRET, algorithms=["HS256"])
+        claims = jwt.decode(credentials.credentials, JWT_SECRET, algorithms=["HS256"])
+        if not claims.get("sub") or claims["sub"] != DEMO_USER: raise HTTPException(401, "Token 用户无效")
+        return claims
     except jwt.PyJWTError as exc:
         raise HTTPException(401, "Token 无效或已过期") from exc
 
@@ -89,6 +91,7 @@ def run_task(task_id: str):
         try:
             yolo = YoloDetector().detect(task.image_path, task_id, str(RESULT_DIR))
             task.yolo_result = json.dumps(yolo, ensure_ascii=False)
+            validate_yolo_result(yolo)
             task.yolo_status = "success"
         except Exception as exc:
             task.yolo_status, task.error = "failed", f"YOLO: {exc}"
@@ -106,7 +109,7 @@ def run_task(task_id: str):
                 task.error = (task.error + " | " if task.error else "") + f"VLM: {vlm['error']}"
         except Exception as exc:
             task.vlm_status, task.error = "failed", (task.error + " | " if task.error else "") + f"VLM: {exc}"
-        if task.yolo_result and task.vlm_result:
+        if task.yolo_status == "success" and task.vlm_status == "success":
             task.comparison_result = json.dumps(compare_row(task.id, json.loads(task.yolo_result), json.loads(task.vlm_result)), ensure_ascii=False)
         task.status = "success" if task.yolo_status == task.vlm_status == "success" else "partial_success" if "success" in {task.yolo_status, task.vlm_status} else "failed"
         db.commit()
@@ -138,7 +141,12 @@ async def upload(file: UploadFile = File(...), _: dict = Depends(auth)):
     suffix = Path(file.filename or "upload.jpg").suffix.lower() or ".jpg"
     sha = hashlib.sha256(data).hexdigest()
     path = UPLOAD_DIR / f"{sha}{suffix}"
-    path.write_bytes(data)
+    if path.exists() or path.is_symlink():
+        if path.is_symlink() or not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest() != sha:
+            raise HTTPException(409, "上传目标已存在且内容不一致")
+    else:
+        with path.open("xb") as handle:
+            handle.write(data)
     return {"image_path": str(path), "image_sha256": sha, "filename": file.filename}
 
 
@@ -149,7 +157,7 @@ def compare(payload: dict, tasks: BackgroundTasks, _: dict = Depends(auth)):
         raise HTTPException(400, "请先上传有效图片")
     actual_sha = hashlib.sha256(path.read_bytes()).hexdigest()
     claimed_sha = str(payload.get("image_sha256", ""))
-    if claimed_sha and not hmac.compare_digest(claimed_sha, actual_sha):
+    if not claimed_sha or not hmac.compare_digest(claimed_sha, actual_sha):
         raise HTTPException(400, "图片哈希校验失败")
     task_id = str(uuid.uuid4())
     task = Task(id=task_id, image_path=str(path), image_sha256=actual_sha)
@@ -174,10 +182,14 @@ def hash_password(password: str) -> str:
 def verify_password(password: str, encoded: str) -> bool:
     try:
         scheme, iterations, salt_hex, digest_hex = encoded.split("$", 3)
-        if scheme != "pbkdf2_sha256":
+        if scheme != "pbkdf2_sha256" or not 100000 <= int(iterations) <= 1000000:
             return False
-        actual = hashlib.pbkdf2_hmac("sha256", password.encode(), bytes.fromhex(salt_hex), int(iterations))
-        return hmac.compare_digest(actual.hex(), digest_hex)
+        salt = bytes.fromhex(salt_hex)
+        digest = bytes.fromhex(digest_hex)
+        if len(salt) != 16 or len(digest) != 32:
+            return False
+        actual = hashlib.pbkdf2_hmac("sha256", password.encode(), salt, int(iterations))
+        return hmac.compare_digest(actual, digest)
     except (ValueError, TypeError):
         return False
 

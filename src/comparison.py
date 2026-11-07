@@ -2,10 +2,13 @@ import csv,json
 from pathlib import Path
 try:
  from .vlm_pipeline import validate_result_record
+ from .traditional_pipeline import validate_yolo_result
 except ImportError:
  from vlm_pipeline import validate_result_record
+ from traditional_pipeline import validate_yolo_result
 
 def compare_row(image_id,traditional,vlm=None):
+ validate_yolo_result(traditional)
  status, error = "not_run", None
  if vlm is not None:
   try:

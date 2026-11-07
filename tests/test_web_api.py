@@ -28,7 +28,7 @@ class WebApiTests(unittest.TestCase):
         self.assertTrue(token())
 
 
-    @patch.object(web_app.YoloDetector, "detect", return_value={"method": "YOLO", "counts": {"mouse": 2}})
+    @patch.object(web_app.YoloDetector, "detect", return_value={"method": "YOLO", "model": "test", "objects": [{"name": "mouse", "count": 1, "confidence": 0.9, "bbox": [0, 0, 1, 1]}, {"name": "mouse", "count": 1, "confidence": 0.8, "bbox": [1, 1, 2, 2]}], "counts": {"mouse": 2}, "runtime_seconds": 0.1, "error": None})
     @patch.object(web_app, "run_vlm", return_value={"method": "VLM", "objects": [{"name": "mouse", "count": 2}], "counts": {"mouse": 2}, "error": None})
     def test_upload_and_compare_with_model_adapters(self, _vlm, _yolo):
         headers = {"Authorization": f"Bearer {token()}"}

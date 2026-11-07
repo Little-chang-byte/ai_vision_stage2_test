@@ -7,6 +7,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 import vlm_pipeline as v
 from comparison import compare_row, save_comparison
 
+VALID_YOLO={"method":"YOLO","model":"test","objects":[],"counts":{},"runtime_seconds":0.1,"error":None}
+
 class VlmRegressionTests(unittest.TestCase):
     def test_duplicate_counts(self):
         self.assertEqual(v.aggregate_objects([{"name":"mouse","count":1},{"name":"mouse","count":1}])[1], {"mouse":2})
@@ -42,11 +44,11 @@ class VlmRegressionTests(unittest.TestCase):
 
     def test_comparison_requires_verified_record(self):
         invalid = {"image_id":"x", "method":"VLM", "objects":["mouse"], "counts":{"mouse":1}, "runtime_seconds":1, "error":None}
-        self.assertEqual(compare_row("x", {"counts":{}}, invalid)["vlm_status"], "error")
+        self.assertEqual(compare_row("x", VALID_YOLO, invalid)["vlm_status"], "error")
 
     def test_comparison_accepts_complete_empty_result_and_writes_consistent_files(self):
         valid = {"image_id":"x", "method":"VLM", "model":"qwen3-vl:4b", "objects":[], "counts":{}, "runtime_seconds":1, "done":True, "done_reason":"stop", "error":None, "attempts":[{"attempt":1,"status":"verified"}]}
-        row = compare_row("x", {"counts":{}}, valid)
+        row = compare_row("x", VALID_YOLO, valid)
         self.assertEqual(row["vlm_status"], "verified")
         with tempfile.TemporaryDirectory() as td:
             save_comparison([row], td)
@@ -64,10 +66,12 @@ class VlmRegressionTests(unittest.TestCase):
                 result = v.run_vlm(image, "FLOW", Path(td) / "vlm")
             finally:
                 v.request, v.MAX_RETRIES, v.RETRY_BACKOFF_SECONDS = old_request, old_retries, old_backoff
-            row = compare_row("FLOW", {"counts":{}}, result)
+            row = compare_row("FLOW", VALID_YOLO, result)
             self.assertEqual(result["error"], "VLM_SCHEMA_VALIDATION_FAILED")
             self.assertEqual(row["vlm_status"], "error")
             self.assertEqual(row["vlm_counts"], {})
 
 if __name__ == "__main__": unittest.main()
+
+
 
