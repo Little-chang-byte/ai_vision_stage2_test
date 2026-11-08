@@ -1,0 +1,145 @@
+{
+  "commit": "6f1b1a037012e196cf278eded650e121db9282c6",
+  "worktree_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "task_mode": "local",
+  "redis_verified": false,
+  "budget": "4000",
+  "tasks": [
+    {
+      "task_id": "22bd3bc9-deec-45d3-8303-2f7e61888459",
+      "status": "success",
+      "image_sha256": "d105999d32b86c1c3e3d9535708d7ba147fd5d481311df38d166820435d86cb2",
+      "yolo_status": "success",
+      "vlm_status": "success",
+      "yolo": {
+        "image_id": "22bd3bc9-deec-45d3-8303-2f7e61888459",
+        "method": "YOLO",
+        "model": "yolo11n.pt",
+        "objects": [
+          {
+            "name": "mouse",
+            "count": 1,
+            "confidence": 0.9404,
+            "bbox": [
+              1229.72,
+              617.8,
+              1581.92,
+              1203.17
+            ]
+          },
+          {
+            "name": "book",
+            "count": 1,
+            "confidence": 0.851,
+            "bbox": [
+              3.17,
+              161.88,
+              1262.64,
+              1278.42
+            ]
+          },
+          {
+            "name": "cup",
+            "count": 1,
+            "confidence": 0.8188,
+            "bbox": [
+              750.09,
+              0.14,
+              1159.08,
+              407.35
+            ]
+          },
+          {
+            "name": "mouse",
+            "count": 1,
+            "confidence": 0.4466,
+            "bbox": [
+              1187.2,
+              262.83,
+              1399.9,
+              483.33
+            ]
+          }
+        ],
+        "counts": {
+          "mouse": 2,
+          "book": 1,
+          "cup": 1
+        },
+        "runtime_seconds": 1.5822,
+        "error": null
+      },
+      "vlm": {
+        "image_id": "22bd3bc9-deec-45d3-8303-2f7e61888459",
+        "method": "VLM",
+        "model": "qwen3-vl:4b",
+        "objects": [
+          {
+            "name": "textbook",
+            "count": 1,
+            "uncertain": false
+          },
+          {
+            "name": "bottle",
+            "count": 1,
+            "uncertain": false
+          },
+          {
+            "name": "earbuds case",
+            "count": 1,
+            "uncertain": false
+          },
+          {
+            "name": "mouse",
+            "count": 1,
+            "uncertain": false
+          }
+        ],
+        "counts": {
+          "textbook": 1,
+          "bottle": 1,
+          "earbuds case": 1,
+          "mouse": 1
+        },
+        "runtime_seconds": 11.0166,
+        "done": true,
+        "done_reason": "stop",
+        "raw_content_length": 204,
+        "error": null,
+        "attempts": [
+          {
+            "attempt": 1,
+            "status": "verified",
+            "error_type": null,
+            "done_reason": "stop",
+            "raw_content_length": 204
+          }
+        ]
+      },
+      "comparison": {
+        "image_id": "22bd3bc9-deec-45d3-8303-2f7e61888459",
+        "yolo_status": "success",
+        "vlm_status": "verified",
+        "yolo_counts": {
+          "mouse": 2,
+          "book": 1,
+          "cup": 1
+        },
+        "vlm_counts": {
+          "textbook": 1,
+          "bottle": 1,
+          "earbuds case": 1,
+          "mouse": 1
+        },
+        "yolo_runtime_seconds": 1.5822,
+        "vlm_runtime_seconds": 11.0166,
+        "vlm_error": null,
+        "vlm_answer_source": null
+      },
+      "error": null,
+      "note": "",
+      "created_at": "2026-11-08T02:53:29.247705",
+      "source_image_id": "D001"
+    }
+  ]
+}

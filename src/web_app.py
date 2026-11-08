@@ -157,14 +157,14 @@ def _run_task(task_id: str):
 
 @app.get("/health")
 def health():
-    return {"status": "ok", "task_mode": os.getenv("TASK_MODE", "celery"), "models": {"yolo": "available", "vlm": os.getenv("VLM_MODEL", "qwen3-vl:4b")}}
+    return {"status": "ok", "task_mode": os.getenv("TASK_MODE", "celery"), "models": {"yolo": "configured", "vlm": os.getenv("VLM_MODEL", "qwen3-vl:4b")}}
 
 
 @app.post("/api/auth/login")
 def login(payload: dict):
     if not JWT_SECRET or not DEMO_PASSWORD_HASH:
         raise HTTPException(503, "JWT_SECRET 和 DEMO_PASSWORD_HASH 必须配置")
-    if not secrets.compare_digest(str(payload.get("username", "")), DEMO_USER) or not verify_password(str(payload.get("password", "")), DEMO_PASSWORD_HASH):
+    if not secrets.compare_digest(str(payload.get("username", "")).encode(), DEMO_USER.encode()) or not verify_password(str(payload.get("password", "")), DEMO_PASSWORD_HASH):
         raise HTTPException(401, "用户名或密码错误")
     token = jwt.encode({"sub": DEMO_USER, "exp": datetime.now(timezone.utc) + timedelta(hours=8)}, JWT_SECRET, algorithm="HS256")
     return {"access_token": token, "token_type": "bearer"}
@@ -241,6 +241,8 @@ def hash_password(password: str) -> str:
 
 
 def verify_password(password: str, encoded: str) -> bool:
+    if not isinstance(password, str) or not password or not isinstance(encoded, str):
+        return False
     try:
         scheme, iterations, salt_hex, digest_hex = encoded.split("$", 3)
         if scheme != "pbkdf2_sha256" or not 100000 <= int(iterations) <= 1000000:
