@@ -1,18 +1,18 @@
 {
-  "commit": "6f1b1a037012e196cf278eded650e121db9282c6",
+  "commit": "6eaaba4e0abfb5fe05275647fdb529878da40361",
   "worktree_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
   "task_mode": "local",
   "redis_verified": false,
   "budget": "4000",
   "tasks": [
     {
-      "task_id": "22bd3bc9-deec-45d3-8303-2f7e61888459",
+      "task_id": "5e5aba07-a93a-437c-8c26-2794dc629d52",
       "status": "success",
       "image_sha256": "d105999d32b86c1c3e3d9535708d7ba147fd5d481311df38d166820435d86cb2",
       "yolo_status": "success",
       "vlm_status": "success",
       "yolo": {
-        "image_id": "22bd3bc9-deec-45d3-8303-2f7e61888459",
+        "image_id": "5e5aba07-a93a-437c-8c26-2794dc629d52",
         "method": "YOLO",
         "model": "yolo11n.pt",
         "objects": [
@@ -66,11 +66,11 @@
           "book": 1,
           "cup": 1
         },
-        "runtime_seconds": 1.5822,
+        "runtime_seconds": 1.6132,
         "error": null
       },
       "vlm": {
-        "image_id": "22bd3bc9-deec-45d3-8303-2f7e61888459",
+        "image_id": "5e5aba07-a93a-437c-8c26-2794dc629d52",
         "method": "VLM",
         "model": "qwen3-vl:4b",
         "objects": [
@@ -101,10 +101,10 @@
           "earbuds case": 1,
           "mouse": 1
         },
-        "runtime_seconds": 11.0166,
+        "runtime_seconds": 8.5302,
         "done": true,
         "done_reason": "stop",
-        "raw_content_length": 204,
+        "raw_content_length": 213,
         "error": null,
         "attempts": [
           {
@@ -112,12 +112,12 @@
             "status": "verified",
             "error_type": null,
             "done_reason": "stop",
-            "raw_content_length": 204
+            "raw_content_length": 213
           }
         ]
       },
       "comparison": {
-        "image_id": "22bd3bc9-deec-45d3-8303-2f7e61888459",
+        "image_id": "5e5aba07-a93a-437c-8c26-2794dc629d52",
         "yolo_status": "success",
         "vlm_status": "verified",
         "yolo_counts": {
@@ -131,14 +131,14 @@
           "earbuds case": 1,
           "mouse": 1
         },
-        "yolo_runtime_seconds": 1.5822,
-        "vlm_runtime_seconds": 11.0166,
+        "yolo_runtime_seconds": 1.6132,
+        "vlm_runtime_seconds": 8.5302,
         "vlm_error": null,
         "vlm_answer_source": null
       },
       "error": null,
       "note": "",
-      "created_at": "2026-11-08T02:53:29.247705",
+      "created_at": "2026-11-08T02:56:27.865687",
       "source_image_id": "D001"
     }
   ]
