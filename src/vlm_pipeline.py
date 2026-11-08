@@ -2,6 +2,8 @@ import base64, json, os, time
 from collections import OrderedDict
 from pathlib import Path
 import requests
+import math
+from urllib.parse import urlparse
 
 PROMPT = 'List visible physical objects. Return JSON only: {"objects":[{"name":"short English category","count":1,"uncertain":false}]}. Do not describe text or explain reasoning.'
 RETRY_PROMPT = 'Return JSON only: {"objects":[{"name":"object","count":1,"uncertain":false}]}. List clearly visible physical objects. Do not explain reasoning.'
@@ -70,9 +72,13 @@ def parse_json(raw):
 
 def request(prompt, data):
     base_url = os.getenv("OLLAMA_BASE_URL", "http://127.0.0.1:11434").rstrip("/")
-    if not base_url:
-        raise RuntimeError("OLLAMA_BASE_URL is not configured")
-    response = requests.post(f"{base_url}/api/chat", json={"model": os.getenv("VLM_MODEL", "qwen3-vl:4b"), "messages": [{"role": "user", "content": prompt, "images": [data]}], "stream": False, "think": False, "format": "json", "options": {"temperature": 0, "num_predict": 500}}, timeout=float(os.getenv("VLM_TIMEOUT_SECONDS", "120")))
+    parsed_url = urlparse(base_url)
+    if parsed_url.scheme not in {"http", "https"} or not parsed_url.hostname:
+        raise ValueError("OLLAMA_BASE_URL must be an HTTP URL")
+    timeout = float(os.getenv("VLM_TIMEOUT_SECONDS", "120"))
+    if not math.isfinite(timeout) or timeout <= 0:
+        raise ValueError("VLM_TIMEOUT_SECONDS must be positive")
+    response = requests.post(f"{base_url}/api/chat", json={"model": os.getenv("VLM_MODEL", "qwen3-vl:4b"), "messages": [{"role": "user", "content": prompt, "images": [data]}], "stream": False, "think": False, "format": "json", "options": {"temperature": 0, "num_predict": int(os.getenv("VLM_NUM_PREDICT", "4000"))}}, timeout=timeout)
     response.raise_for_status()
     return response.json()
 
@@ -88,6 +94,8 @@ def run_vlm(image_path, image_id, output_dir="results/vlm"):
     for attempt in range(1, MAX_RETRIES + 2):
         try:
             body = request(PROMPT if attempt == 1 else RETRY_PROMPT, data)
+            with open(out / f"{image_id}_attempt_{attempt}_raw.json", "w", encoding="utf-8") as evidence:
+                json.dump(body, evidence, ensure_ascii=False, indent=2)
             message = body.get("message")
             raw = message.get("content") if isinstance(message, dict) else None
             done_reason = body.get("done_reason")

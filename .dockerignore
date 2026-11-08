@@ -6,3 +6,6 @@ results
 data/uploads
 data/stage3.db
 tests
+
+tmp
+yolo11n.pt

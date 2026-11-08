@@ -35,6 +35,20 @@ class VlmRegressionTests(unittest.TestCase):
         finally:
             if old is None: os.environ.pop("OLLAMA_BASE_URL", None)
             else: os.environ["OLLAMA_BASE_URL"] = old
+    def test_ollama_configuration_boundaries(self):
+        for url in ["http://127.0.0.1:11434", "http://host.docker.internal:11434/", "http://example.test///"]:
+            with patch.dict(os.environ, {"OLLAMA_BASE_URL":url, "VLM_TIMEOUT_SECONDS":"120"}), patch.object(v.requests, "post") as post:
+                post.return_value.json.return_value = {}
+                v.request("p", "data")
+                self.assertEqual(post.call_args.args[0], url.rstrip("/")+"/api/chat")
+                self.assertEqual(post.call_args.kwargs["timeout"], 120)
+        for url in ["", "bad-url", "ftp://bad"]:
+            with patch.dict(os.environ, {"OLLAMA_BASE_URL":url}), self.assertRaises(ValueError):
+                v.request("p", "data")
+        for timeout in ["0", "-1", "not-a-number", "nan", "inf"]:
+            with patch.dict(os.environ, {"VLM_TIMEOUT_SECONDS":timeout}), self.assertRaises(ValueError):
+                v.request("p", "data")
+
     def test_duplicate_counts(self):
         self.assertEqual(v.aggregate_objects([{"name":"mouse","count":1},{"name":"mouse","count":1}])[1], {"mouse":2})
         self.assertEqual(v.aggregate_objects([{"name":"mouse","count":1},{"name":"mouse","count":2},{"name":"keyboard","count":1},{"name":"mouse","count":1}])[1], {"mouse":4,"keyboard":1})

@@ -6,3 +6,5 @@ models/*.pt
 data/stage3.db
 data/uploads/
 
+
+tmp/

@@ -9,11 +9,13 @@ def validate_yolo_result(result):
     totals = Counter()
     for item in result["objects"]:
         if not isinstance(item, dict) or not isinstance(item.get("name"), str) or not item["name"].strip(): raise ValueError("YOLO_INVALID_OBJECT")
-        if item.get("count") != 1: raise ValueError("YOLO_INVALID_COUNT")
+        if type(item.get("count")) is not int or item["count"] != 1: raise ValueError("YOLO_INVALID_COUNT")
         conf, bbox = item.get("confidence"), item.get("bbox")
         if not isinstance(conf, (int, float)) or isinstance(conf, bool) or not math.isfinite(conf) or not 0 <= conf <= 1: raise ValueError("YOLO_INVALID_CONFIDENCE")
         if not isinstance(bbox, list) or len(bbox) != 4 or any(not isinstance(x, (int, float)) or isinstance(x, bool) or not math.isfinite(x) for x in bbox): raise ValueError("YOLO_INVALID_BBOX")
         totals[item["name"]] += 1
+    if any(not isinstance(name, str) or not name.strip() or type(count) is not int or count <= 0 for name, count in result["counts"].items()): raise ValueError("YOLO_INVALID_COUNT")
+    if any(not isinstance(name, str) or not name.strip() or type(count) is not int or count <= 0 for name, count in result["counts"].items()): raise ValueError("YOLO_INVALID_COUNT")
     if result["counts"] != dict(totals): raise ValueError("YOLO_COUNTS_MISMATCH")
     return True
 class YoloDetector:

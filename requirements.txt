@@ -9,3 +9,7 @@ SQLAlchemy
 PyJWT
 python-multipart
 
+
+celery
+redis
+httpx
