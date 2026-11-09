@@ -1,0 +1,30 @@
+Creating new Ultralytics Settings v0.0.8 file ✅ 
+View Ultralytics Settings with 'yolo settings' or at '/root/.config/Ultralytics/settings.json'
+Update Settings with 'yolo settings key=value', i.e. 'yolo settings runs_dir=path/to/dir'. For help see https://docs.ultralytics.com/usage/settings
+test_alias_and_empty (test_vlm_pipeline.VlmRegressionTests.test_alias_and_empty) ... ok
+test_comparison_accepts_complete_empty_result_and_writes_consistent_files (test_vlm_pipeline.VlmRegressionTests.test_comparison_accepts_complete_empty_result_and_writes_consistent_files) ... ok
+test_comparison_requires_verified_record (test_vlm_pipeline.VlmRegressionTests.test_comparison_requires_verified_record) ... ok
+test_duplicate_counts (test_vlm_pipeline.VlmRegressionTests.test_duplicate_counts) ... ok
+test_ids_use_same_retry_rules (test_vlm_pipeline.VlmRegressionTests.test_ids_use_same_retry_rules) ... ok
+test_invalid_values (test_vlm_pipeline.VlmRegressionTests.test_invalid_values) ... ok
+test_mocked_production_flow_rejects_invalid_objects_before_comparison (test_vlm_pipeline.VlmRegressionTests.test_mocked_production_flow_rejects_invalid_objects_before_comparison) ... ok
+test_ollama_base_url_is_configurable (test_vlm_pipeline.VlmRegressionTests.test_ollama_base_url_is_configurable) ... ok
+test_ollama_configuration_boundaries (test_vlm_pipeline.VlmRegressionTests.test_ollama_configuration_boundaries) ... ok
+test_truncated_json_rejected (test_vlm_pipeline.VlmRegressionTests.test_truncated_json_rejected) ... ok
+test_yolo_schema_validation (test_vlm_pipeline.VlmRegressionTests.test_yolo_schema_validation) ... ok
+test_crud_and_protected_images (test_web_api.WebApiTests.test_crud_and_protected_images) ... ok
+test_duplicate_delivery_does_not_run_models_twice (test_web_api.WebApiTests.test_duplicate_delivery_does_not_run_models_twice) ... ok
+test_duplicate_upload_and_invalid_image (test_web_api.WebApiTests.test_duplicate_upload_and_invalid_image) ... ok
+test_four_model_outcomes_and_database (test_web_api.WebApiTests.test_four_model_outcomes_and_database) ... ok
+test_hash_binding_and_path_rejection (test_web_api.WebApiTests.test_hash_binding_and_path_rejection) ... ok
+test_login_and_jwt_cases (test_web_api.WebApiTests.test_login_and_jwt_cases) ... ok
+test_model_exceptions_independent (test_web_api.WebApiTests.test_model_exceptions_independent) ... ok
+test_password_format (test_web_api.WebApiTests.test_password_format) ... ok
+test_queue_publish_and_failure (test_web_api.WebApiTests.test_queue_publish_and_failure) ... ok
+test_symlink_upload_rejected (test_web_api.WebApiTests.test_symlink_upload_rejected) ... ok
+test_worker_interruption_requires_explicit_recovery (test_web_api.WebApiTests.test_worker_interruption_requires_explicit_recovery) ... ok
+
+----------------------------------------------------------------------
+Ran 22 tests in 1.231s
+
+OK

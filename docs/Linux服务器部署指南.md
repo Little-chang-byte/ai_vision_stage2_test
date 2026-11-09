@@ -1,8 +1,8 @@
 # Linux 与 Docker 部署实践指南
 
-当前本机无可用 Docker CLI、Redis 服务或完成安装的 WSL Linux。云服务器未提供。以下部署命令均为待验证步骤，不能作为已部署证据。官方 Windows Redis 安装路径为 WSL、Docker 或 Memurai，参考 https://redis.io/docs/latest/operate/oss_and_stack/install/archive/install-redis/install-redis-on-windows/ 。
+2026-11-09 本机 WSL2 Ubuntu + Docker Desktop 已完成容器网页六图验收。现有环境无需重复安装，具体步骤见《WSL2本机部署与录屏.md》。云服务器未提供；下面涉及远程 SSH、服务器系统安装的命令仍未验证，不能作为远程部署证据。官方 Windows Redis 安装路径为 WSL、Docker 或 Memurai，参考 https://redis.io/docs/latest/operate/oss_and_stack/install/archive/install-redis/install-redis-on-windows/ 。
 
-## 用户需要亲自操作
+## 未来远程服务器准备（本轮不要求；已安装的本机步骤不必重复）
 
 1. 管理员 PowerShell 启用 WSL2，运行 `wsl --install -d Ubuntu`，按提示重启并完成 Ubuntu 用户初始化。系统命令位置为 C:/Windows/System32/wsl.exe。
 2. 安装 Docker Desktop，启用 WSL2 后端，在 Docker Desktop 显示 Engine running 后运行 `docker version` 与 `docker compose version`。这些操作可能要求管理员权限、重启或许可确认。

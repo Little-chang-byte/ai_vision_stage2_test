@@ -1,0 +1,134 @@
+Creating new Ultralytics Settings v0.0.8 file ✅ 
+View Ultralytics Settings with 'yolo settings' or at '/root/.config/Ultralytics/settings.json'
+Update Settings with 'yolo settings key=value', i.e. 'yolo settings runs_dir=path/to/dir'. For help see https://docs.ultralytics.com/usage/settings
+test_alias_and_empty (test_vlm_pipeline.VlmRegressionTests.test_alias_and_empty) ... ok
+test_comparison_accepts_complete_empty_result_and_writes_consistent_files (test_vlm_pipeline.VlmRegressionTests.test_comparison_accepts_complete_empty_result_and_writes_consistent_files) ... ok
+test_comparison_requires_verified_record (test_vlm_pipeline.VlmRegressionTests.test_comparison_requires_verified_record) ... ok
+test_duplicate_counts (test_vlm_pipeline.VlmRegressionTests.test_duplicate_counts) ... ok
+test_ids_use_same_retry_rules (test_vlm_pipeline.VlmRegressionTests.test_ids_use_same_retry_rules) ... ok
+test_invalid_values (test_vlm_pipeline.VlmRegressionTests.test_invalid_values) ... ok
+test_mocked_production_flow_rejects_invalid_objects_before_comparison (test_vlm_pipeline.VlmRegressionTests.test_mocked_production_flow_rejects_invalid_objects_before_comparison) ... ok
+test_ollama_base_url_is_configurable (test_vlm_pipeline.VlmRegressionTests.test_ollama_base_url_is_configurable) ... ok
+test_ollama_configuration_boundaries (test_vlm_pipeline.VlmRegressionTests.test_ollama_configuration_boundaries) ... ok
+test_truncated_json_rejected (test_vlm_pipeline.VlmRegressionTests.test_truncated_json_rejected) ... ok
+test_yolo_schema_validation (test_vlm_pipeline.VlmRegressionTests.test_yolo_schema_validation) ... ok
+test_crud_and_protected_images (test_web_api.WebApiTests.test_crud_and_protected_images) ... ok
+test_duplicate_delivery_does_not_run_models_twice (test_web_api.WebApiTests.test_duplicate_delivery_does_not_run_models_twice) ... ok
+WARNING ⚠️ [31m[1mrequirements:[0m Ultralytics requirement ['pi-heif'] not found, AutoUpdate disabled by YOLO_AUTOINSTALL=False
+test_duplicate_upload_and_invalid_image (test_web_api.WebApiTests.test_duplicate_upload_and_invalid_image) ... ERROR
+test_four_model_outcomes_and_database (test_web_api.WebApiTests.test_four_model_outcomes_and_database) ... ok
+test_hash_binding_and_path_rejection (test_web_api.WebApiTests.test_hash_binding_and_path_rejection) ... ok
+test_login_and_jwt_cases (test_web_api.WebApiTests.test_login_and_jwt_cases) ... ok
+test_model_exceptions_independent (test_web_api.WebApiTests.test_model_exceptions_independent) ... ok
+test_password_format (test_web_api.WebApiTests.test_password_format) ... ok
+test_queue_publish_and_failure (test_web_api.WebApiTests.test_queue_publish_and_failure) ... ok
+test_symlink_upload_rejected (test_web_api.WebApiTests.test_symlink_upload_rejected) ... ok
+test_worker_interruption_requires_explicit_recovery (test_web_api.WebApiTests.test_worker_interruption_requires_explicit_recovery) ... ok
+
+======================================================================
+ERROR: test_duplicate_upload_and_invalid_image (test_web_api.WebApiTests.test_duplicate_upload_and_invalid_image)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/ultralytics/utils/patches.py", line 91, in image_open
+    return _image_open(filename, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/PIL/Image.py", line 3730, in open
+    raise UnidentifiedImageError(msg)
+PIL.UnidentifiedImageError: cannot identify image file <_io.BytesIO object at 0x7da6dc821030>
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/app/tests/test_web_api.py", line 123, in test_duplicate_upload_and_invalid_image
+    response = self.client.post("/api/upload", headers=self.headers, files={"file": ("fake.png", b"not-image", "image/png")})
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/httpx2/_client.py", line 1203, in post
+    return self.request(
+           ^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/starlette/testclient.py", line 518, in request
+    return super().request(
+           ^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/httpx2/_client.py", line 796, in request
+    return self.send(request, auth=auth, follow_redirects=follow_redirects)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/httpx2/_client.py", line 993, in send
+    raise exc
+  File "/usr/local/lib/python3.11/site-packages/httpx2/_client.py", line 987, in send
+    response.read()
+  File "/usr/local/lib/python3.11/site-packages/httpx2/_models.py", line 877, in read
+    self._content = b"".join(self.iter_bytes())
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/httpx2/_models.py", line 893, in iter_bytes
+    for raw_bytes in self.iter_raw():
+  File "/usr/local/lib/python3.11/site-packages/httpx2/_models.py", line 948, in iter_raw
+    for raw_stream_bytes in self.stream:
+  File "/usr/local/lib/python3.11/site-packages/httpx2/_client.py", line 143, in __iter__
+    yield from self._stream
+  File "/usr/local/lib/python3.11/site-packages/starlette/testclient.py", line 384, in iter_body
+    exit_stack.close()
+  File "/usr/local/lib/python3.11/contextlib.py", line 609, in close
+    self.__exit__(None, None, None)
+  File "/usr/local/lib/python3.11/contextlib.py", line 601, in __exit__
+    raise exc_details[1]
+  File "/usr/local/lib/python3.11/contextlib.py", line 586, in __exit__
+    if cb(*exc_details):
+       ^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/starlette/testclient.py", line 399, in close_app
+    raise exception
+  File "/usr/local/lib/python3.11/site-packages/anyio/from_thread.py", line 272, in _call_func
+    retval = await retval_or_awaitable
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/starlette/testclient.py", line 366, in run_app
+    await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.11/site-packages/fastapi/applications.py", line 1194, in __call__
+    await super().__call__(scope, receive, send)
+  File "/usr/local/lib/python3.11/site-packages/starlette/applications.py", line 96, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/usr/local/lib/python3.11/site-packages/starlette/middleware/errors.py", line 186, in __call__
+    raise exc
+  File "/usr/local/lib/python3.11/site-packages/starlette/middleware/errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "/usr/local/lib/python3.11/site-packages/fastapi/telemetry/_asgi.py", line 151, in __call__
+    await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.11/site-packages/starlette/middleware/exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/usr/local/lib/python3.11/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/usr/local/lib/python3.11/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/usr/local/lib/python3.11/site-packages/fastapi/middleware/asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.11/site-packages/starlette/routing.py", line 683, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/usr/local/lib/python3.11/site-packages/fastapi/routing.py", line 2811, in app
+    await route.handle(scope, receive, send)
+  File "/usr/local/lib/python3.11/site-packages/fastapi/routing.py", line 1330, in handle
+    await super().handle(scope, receive, send)
+  File "/usr/local/lib/python3.11/site-packages/starlette/routing.py", line 289, in handle
+    await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.11/site-packages/fastapi/routing.py", line 166, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/usr/local/lib/python3.11/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/usr/local/lib/python3.11/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/usr/local/lib/python3.11/site-packages/fastapi/routing.py", line 152, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/fastapi/routing.py", line 745, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/fastapi/routing.py", line 372, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/src/web_app.py", line 182, in upload
+    with Image.open(io.BytesIO(data)) as image:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/ultralytics/utils/patches.py", line 96, in image_open
+    from pi_heif import register_heif_opener
+ModuleNotFoundError: No module named 'pi_heif'
+
+----------------------------------------------------------------------
+Ran 22 tests in 1.257s
+
+FAILED (errors=1)

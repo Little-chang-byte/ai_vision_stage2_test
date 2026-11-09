@@ -1,0 +1,295 @@
+#0 building with "desktop-linux" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 585B done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/python:3.11-slim
+#2 DONE 0.8s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 176B done
+#3 DONE 0.0s
+
+#4 [internal] load build context
+#4 transferring context: 3.60kB done
+#4 DONE 0.0s
+
+#5 [1/7] FROM docker.io/library/python:3.11-slim@sha256:07d4824036af339fa1b6ef769cc99d9c10a141769538b52b3b597c84f7a7b535
+#5 resolve docker.io/library/python:3.11-slim@sha256:07d4824036af339fa1b6ef769cc99d9c10a141769538b52b3b597c84f7a7b535 0.0s done
+#5 DONE 0.0s
+
+#6 [3/7] RUN apt-get update && apt-get install -y --no-install-recommends libgl1 libglib2.0-0 && rm -rf /var/lib/apt/lists/*
+#6 CACHED
+
+#7 [2/7] WORKDIR /app
+#7 CACHED
+
+#8 [4/7] RUN pip install --no-cache-dir torch torchvision --index-url https://download.pytorch.org/whl/cpu
+#8 CACHED
+
+#9 [5/7] COPY requirements.txt .
+#9 DONE 0.0s
+
+#10 [6/7] RUN pip install --no-cache-dir -r requirements.txt
+#10 1.101 Collecting ultralytics (from -r requirements.txt (line 1))
+#10 1.580   Downloading ultralytics-8.4.208-py3-none-any.whl.metadata (47 kB)
+#10 1.667      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 47.7/47.7 kB 1.4 MB/s eta 0:00:00
+#10 1.955 Collecting opencv-python-headless (from -r requirements.txt (line 2))
+#10 2.087   Downloading opencv_python_headless-5.0.0.93-cp37-abi3-manylinux_2_28_x86_64.whl.metadata (19 kB)
+#10 2.093 Requirement already satisfied: Pillow in /usr/local/lib/python3.11/site-packages (from -r requirements.txt (line 3)) (13.0.0)
+#10 2.338 Collecting pi-heif (from -r requirements.txt (line 4))
+#10 2.472   Downloading pi_heif-1.4.0-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (6.3 kB)
+#10 2.610 Collecting python-dotenv (from -r requirements.txt (line 5))
+#10 2.740   Downloading python_dotenv-1.2.4-py3-none-any.whl.metadata (29 kB)
+#10 2.996 Collecting openai (from -r requirements.txt (line 6))
+#10 3.128   Downloading openai-3.46.0-py3-none-any.whl.metadata (45 kB)
+#10 3.262      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 45.6/45.6 kB 275.1 kB/s eta 0:00:00
+#10 3.564 Collecting fastapi (from -r requirements.txt (line 7))
+#10 3.694   Downloading fastapi-0.162.2-py3-none-any.whl.metadata (27 kB)
+#10 4.119 Collecting uvicorn (from -r requirements.txt (line 8))
+#10 4.251   Downloading uvicorn-0.54.0-py3-none-any.whl.metadata (6.6 kB)
+#10 4.859 Collecting SQLAlchemy (from -r requirements.txt (line 9))
+#10 4.990   Downloading sqlalchemy-2.1.8-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (9.7 kB)
+#10 5.133 Collecting PyJWT (from -r requirements.txt (line 10))
+#10 5.276   Downloading pyjwt-2.15.1-py3-none-any.whl.metadata (3.5 kB)
+#10 5.413 Collecting python-multipart (from -r requirements.txt (line 11))
+#10 5.553   Downloading python_multipart-0.0.33-py3-none-any.whl.metadata (6.3 kB)
+#10 5.849 Collecting celery (from -r requirements.txt (line 14))
+#10 5.980   Downloading celery-5.7.0-py3-none-any.whl.metadata (23 kB)
+#10 6.343 Collecting redis (from -r requirements.txt (line 15))
+#10 6.475   Downloading redis-8.1.0-py3-none-any.whl.metadata (16 kB)
+#10 6.683 Collecting httpx (from -r requirements.txt (line 16))
+#10 6.822   Downloading httpx-0.28.1-py3-none-any.whl.metadata (7.1 kB)
+#10 6.856 Requirement already satisfied: numpy>=1.23.0 in /usr/local/lib/python3.11/site-packages (from ultralytics->-r requirements.txt (line 1)) (2.4.6)
+#10 7.141 Collecting matplotlib>=3.3.0 (from ultralytics->-r requirements.txt (line 1))
+#10 7.277   Downloading matplotlib-3.11.2-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (80 kB)
+#10 7.360      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 80.3/80.3 kB 3.5 MB/s eta 0:00:00
+#10 7.673 Collecting opencv-python!=4.13.0.90,>=4.7.0 (from ultralytics->-r requirements.txt (line 1))
+#10 7.817   Downloading opencv_python-5.0.0.93-cp37-abi3-manylinux_2_28_x86_64.whl.metadata (19 kB)
+#10 8.092 Collecting requests>=2.23.0 (from ultralytics->-r requirements.txt (line 1))
+#10 8.223   Downloading requests-2.34.2-py3-none-any.whl.metadata (4.8 kB)
+#10 8.225 Requirement already satisfied: torch>=1.8.0 in /usr/local/lib/python3.11/site-packages (from ultralytics->-r requirements.txt (line 1)) (2.15.0+cpu)
+#10 8.225 Requirement already satisfied: torchvision>=0.9.0 in /usr/local/lib/python3.11/site-packages (from ultralytics->-r requirements.txt (line 1)) (0.29.2+cpu)
+#10 8.524 Collecting psutil>=5.8.0 (from ultralytics->-r requirements.txt (line 1))
+#10 8.658   Downloading psutil-7.2.2-cp36-abi3-manylinux2010_x86_64.manylinux_2_12_x86_64.manylinux_2_28_x86_64.whl.metadata (22 kB)
+#10 9.020 Collecting polars>=0.20.0 (from ultralytics->-r requirements.txt (line 1))
+#10 9.151   Downloading polars-2.1.0-py3-none-any.whl.metadata (11 kB)
+#10 9.291 Collecting nvidia-ml-py>=12.0.0 (from ultralytics->-r requirements.txt (line 1))
+#10 9.421   Downloading nvidia_ml_py-13.615.71-py3-none-any.whl.metadata (9.7 kB)
+#10 9.657 Collecting ultralytics-thop>=2.2.4 (from ultralytics->-r requirements.txt (line 1))
+#10 9.791   Downloading ultralytics_thop-2.2.5-py3-none-any.whl.metadata (14 kB)
+#10 10.22 Collecting ultralytics-platform>=0.1.102 (from ultralytics->-r requirements.txt (line 1))
+#10 10.35   Downloading ultralytics_platform-0.1.107-py3-none-any.whl.metadata (18 kB)
+#10 10.72 Collecting anyio<5,>=4.10.0 (from openai->-r requirements.txt (line 6))
+#10 10.85   Downloading anyio-4.16.0-py3-none-any.whl.metadata (4.7 kB)
+#10 11.06 Collecting httpx2<3,>=2.12.0 (from openai->-r requirements.txt (line 6))
+#10 11.19   Downloading httpx2-2.16.0-py3-none-any.whl.metadata (10 kB)
+#10 11.58 Collecting jiter<1,>=0.16.0 (from openai->-r requirements.txt (line 6))
+#10 11.71   Downloading jiter-0.19.0-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (5.2 kB)
+#10 12.13 Collecting pydantic!=2.0.*,!=2.1.*,!=2.2.*,!=2.3.*,<3,>=1.10.13 (from openai->-r requirements.txt (line 6))
+#10 12.35   Downloading pydantic-2.14.3-py3-none-any.whl.metadata (141 kB)
+#10 12.44      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 141.5/141.5 kB 5.9 MB/s eta 0:00:00
+#10 12.65 Collecting sniffio (from openai->-r requirements.txt (line 6))
+#10 12.78   Downloading sniffio-1.3.1-py3-none-any.whl.metadata (3.9 kB)
+#10 12.78 Requirement already satisfied: typing-extensions<5,>=4.14 in /usr/local/lib/python3.11/site-packages (from openai->-r requirements.txt (line 6)) (4.16.0)
+#10 13.01 Collecting starlette>=0.46.0 (from fastapi->-r requirements.txt (line 7))
+#10 13.15   Downloading starlette-1.10.0-py3-none-any.whl.metadata (6.6 kB)
+#10 13.37 Collecting typing-inspection>=0.4.2 (from fastapi->-r requirements.txt (line 7))
+#10 13.50   Downloading typing_inspection-0.4.5-py3-none-any.whl.metadata (2.6 kB)
+#10 13.77 Collecting annotated-doc>=0.0.2 (from fastapi->-r requirements.txt (line 7))
+#10 13.99   Downloading annotated_doc-0.0.5-py3-none-any.whl.metadata (6.5 kB)
+#10 14.34 Collecting opentelemetry-api>=1.44.0 (from fastapi->-r requirements.txt (line 7))
+#10 14.48   Downloading opentelemetry_api-1.45.2-py3-none-any.whl.metadata (1.4 kB)
+#10 14.68 Collecting click>=7.0 (from uvicorn->-r requirements.txt (line 8))
+#10 14.98   Downloading click-8.5.1-py3-none-any.whl.metadata (2.6 kB)
+#10 15.12 Collecting h11>=0.8 (from uvicorn->-r requirements.txt (line 8))
+#10 15.25   Downloading h11-0.16.0-py3-none-any.whl.metadata (8.3 kB)
+#10 15.48 Collecting billiard>=4.3.2 (from celery->-r requirements.txt (line 14))
+#10 15.62   Downloading billiard-4.3.2-py3-none-any.whl.metadata (5.0 kB)
+#10 15.96 Collecting kombu>=5.7.0 (from celery->-r requirements.txt (line 14))
+#10 16.09   Downloading kombu-5.7.0-py3-none-any.whl.metadata (17 kB)
+#10 16.24 Collecting vine<6.0,>=5.1.0 (from celery->-r requirements.txt (line 14))
+#10 16.37   Downloading vine-5.1.0-py3-none-any.whl.metadata (2.7 kB)
+#10 16.61 Collecting click-didyoumean>=0.3.1 (from celery->-r requirements.txt (line 14))
+#10 16.74   Downloading click_didyoumean-0.3.1-py3-none-any.whl.metadata (3.9 kB)
+#10 16.88 Collecting click-repl>=0.4.1 (from celery->-r requirements.txt (line 14))
+#10 17.01   Downloading click_repl-0.4.1-py3-none-any.whl.metadata (3.7 kB)
+#10 17.25 Collecting click-plugins>=1.1.1.2 (from celery->-r requirements.txt (line 14))
+#10 17.39   Downloading click_plugins-1.1.1.2-py2.py3-none-any.whl.metadata (6.5 kB)
+#10 17.64 Collecting python-dateutil==2.9.0.post0 (from celery->-r requirements.txt (line 14))
+#10 17.77   Downloading python_dateutil-2.9.0.post0-py2.py3-none-any.whl.metadata (8.4 kB)
+#10 18.12 Collecting tzlocal (from celery->-r requirements.txt (line 14))
+#10 18.26   Downloading tzlocal-5.4.5-py3-none-any.whl.metadata (7.7 kB)
+#10 18.40 Collecting six>=1.5 (from python-dateutil==2.9.0.post0->celery->-r requirements.txt (line 14))
+#10 18.53   Downloading six-1.17.0-py2.py3-none-any.whl.metadata (1.7 kB)
+#10 18.74 Collecting certifi (from httpx->-r requirements.txt (line 16))
+#10 18.88   Downloading certifi-2026.10.23-py3-none-any.whl.metadata (2.5 kB)
+#10 19.15 Collecting httpcore==1.* (from httpx->-r requirements.txt (line 16))
+#10 19.28   Downloading httpcore-1.0.9-py3-none-any.whl.metadata (21 kB)
+#10 19.57 Collecting idna (from httpx->-r requirements.txt (line 16))
+#10 19.80   Downloading idna-3.20-py3-none-any.whl.metadata (7.2 kB)
+#10 20.17 Collecting prompt_toolkit>=3.0.36 (from click-repl>=0.4.1->celery->-r requirements.txt (line 14))
+#10 20.30   Downloading prompt_toolkit-3.0.53-py3-none-any.whl.metadata (6.4 kB)
+#10 20.45 Collecting httpcore2==2.16.0 (from httpx2<3,>=2.12.0->openai->-r requirements.txt (line 6))
+#10 20.58   Downloading httpcore2-2.16.0-py3-none-any.whl.metadata (27 kB)
+#10 20.72 Collecting truststore>=0.10 (from httpx2<3,>=2.12.0->openai->-r requirements.txt (line 6))
+#10 20.85   Downloading truststore-0.10.5-py3-none-any.whl.metadata (4.5 kB)
+#10 21.08 Collecting amqp>=5.4.2 (from kombu>=5.7.0->celery->-r requirements.txt (line 14))
+#10 21.21   Downloading amqp-5.4.2-py3-none-any.whl.metadata (9.4 kB)
+#10 21.59 Collecting contourpy>=1.0.1 (from matplotlib>=3.3.0->ultralytics->-r requirements.txt (line 1))
+#10 21.72   Downloading contourpy-1.3.3-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (5.5 kB)
+#10 21.85 Collecting cycler>=0.10 (from matplotlib>=3.3.0->ultralytics->-r requirements.txt (line 1))
+#10 21.98   Downloading cycler-0.12.1-py3-none-any.whl.metadata (3.8 kB)
+#10 22.39 Collecting fonttools>=4.28.2 (from matplotlib>=3.3.0->ultralytics->-r requirements.txt (line 1))
+#10 22.52   Downloading fonttools-4.68.0-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (139 kB)
+#10 22.85      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 139.9/139.9 kB 1.6 MB/s eta 0:00:00
+#10 23.20 Collecting kiwisolver>=1.3.1 (from matplotlib>=3.3.0->ultralytics->-r requirements.txt (line 1))
+#10 23.38   Downloading kiwisolver-1.5.1-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (5.2 kB)
+#10 23.38 Requirement already satisfied: packaging>=20.0 in /usr/local/lib/python3.11/site-packages (from matplotlib>=3.3.0->ultralytics->-r requirements.txt (line 1)) (26.3)
+#10 23.73 Collecting pyparsing>=3 (from matplotlib>=3.3.0->ultralytics->-r requirements.txt (line 1))
+#10 23.86   Downloading pyparsing-3.3.3-py3-none-any.whl.metadata (5.9 kB)
+#10 24.11 Collecting polars-runtime-32==2.1.0 (from polars>=0.20.0->ultralytics->-r requirements.txt (line 1))
+#10 24.25   Downloading polars_runtime_32-2.1.0-cp311-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (1.5 kB)
+#10 24.40 Collecting annotated-types>=0.6.0 (from pydantic!=2.0.*,!=2.1.*,!=2.2.*,!=2.3.*,<3,>=1.10.13->openai->-r requirements.txt (line 6))
+#10 24.53   Downloading annotated_types-0.8.0-py3-none-any.whl.metadata (15 kB)
+#10 25.45 Collecting pydantic-core==2.50.4 (from pydantic!=2.0.*,!=2.1.*,!=2.2.*,!=2.3.*,<3,>=1.10.13->openai->-r requirements.txt (line 6))
+#10 25.58   Downloading pydantic_core-2.50.4-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (6.6 kB)
+#10 26.02 Collecting charset_normalizer<4,>=2 (from requests>=2.23.0->ultralytics->-r requirements.txt (line 1))
+#10 26.15   Downloading charset_normalizer-3.5.2-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (46 kB)
+#10 26.21      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 46.4/46.4 kB 17.7 MB/s eta 0:00:00
+#10 26.37 Collecting urllib3<3,>=1.26 (from requests>=2.23.0->ultralytics->-r requirements.txt (line 1))
+#10 26.51   Downloading urllib3-2.8.0-py3-none-any.whl.metadata (7.4 kB)
+#10 26.59 Requirement already satisfied: filelock in /usr/local/lib/python3.11/site-packages (from torch>=1.8.0->ultralytics->-r requirements.txt (line 1)) (4.2.4)
+#10 26.59 Requirement already satisfied: setuptools>=77.0.3 in /usr/local/lib/python3.11/site-packages (from torch>=1.8.0->ultralytics->-r requirements.txt (line 1)) (79.0.1)
+#10 26.59 Requirement already satisfied: sympy>=1.13.3 in /usr/local/lib/python3.11/site-packages (from torch>=1.8.0->ultralytics->-r requirements.txt (line 1)) (1.14.0)
+#10 26.60 Requirement already satisfied: networkx>=2.5.1 in /usr/local/lib/python3.11/site-packages (from torch>=1.8.0->ultralytics->-r requirements.txt (line 1)) (3.6.1)
+#10 26.60 Requirement already satisfied: jinja2 in /usr/local/lib/python3.11/site-packages (from torch>=1.8.0->ultralytics->-r requirements.txt (line 1)) (3.1.6)
+#10 26.60 Requirement already satisfied: fsspec>=0.8.5 in /usr/local/lib/python3.11/site-packages (from torch>=1.8.0->ultralytics->-r requirements.txt (line 1)) (2026.9.0)
+#10 26.94 Collecting wcwidth>=0.1.4 (from prompt_toolkit>=3.0.36->click-repl>=0.4.1->celery->-r requirements.txt (line 14))
+#10 27.14   Downloading wcwidth-0.9.4-cp310-abi3-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (23 kB)
+#10 27.17 Requirement already satisfied: mpmath<1.4,>=1.1.0 in /usr/local/lib/python3.11/site-packages (from sympy>=1.13.3->torch>=1.8.0->ultralytics->-r requirements.txt (line 1)) (1.3.0)
+#10 27.18 Requirement already satisfied: MarkupSafe>=2.0 in /usr/local/lib/python3.11/site-packages (from jinja2->torch>=1.8.0->ultralytics->-r requirements.txt (line 1)) (3.0.3)
+#10 27.36 Downloading ultralytics-8.4.208-py3-none-any.whl (1.5 MB)
+#10 27.78    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.5/1.5 MB 4.2 MB/s eta 0:00:00
+#10 27.94 Downloading opencv_python_headless-5.0.0.93-cp37-abi3-manylinux_2_28_x86_64.whl (61.2 MB)
+#10 37.04    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 61.2/61.2 MB 10.8 MB/s eta 0:00:00
+#10 37.17 Downloading pi_heif-1.4.0-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (1.5 MB)
+#10 37.47    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.5/1.5 MB 6.3 MB/s eta 0:00:00
+#10 37.60 Downloading python_dotenv-1.2.4-py3-none-any.whl (23 kB)
+#10 37.79 Downloading openai-3.46.0-py3-none-any.whl (2.4 MB)
+#10 38.26    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.4/2.4 MB 6.4 MB/s eta 0:00:00
+#10 38.40 Downloading fastapi-0.162.2-py3-none-any.whl (151 kB)
+#10 38.55    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 151.7/151.7 kB 977.3 kB/s eta 0:00:00
+#10 38.68 Downloading uvicorn-0.54.0-py3-none-any.whl (87 kB)
+#10 38.78    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 87.4/87.4 kB 767.4 kB/s eta 0:00:00
+#10 38.91 Downloading sqlalchemy-2.1.8-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (4.7 MB)
+#10 39.52    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.7/4.7 MB 8.6 MB/s eta 0:00:00
+#10 39.66 Downloading pyjwt-2.15.1-py3-none-any.whl (33 kB)
+#10 39.98 Downloading python_multipart-0.0.33-py3-none-any.whl (32 kB)
+#10 40.18 Downloading celery-5.7.0-py3-none-any.whl (519 kB)
+#10 40.41    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 519.6/519.6 kB 3.4 MB/s eta 0:00:00
+#10 40.54 Downloading python_dateutil-2.9.0.post0-py2.py3-none-any.whl (229 kB)
+#10 40.69    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 229.9/229.9 kB 2.7 MB/s eta 0:00:00
+#10 40.82 Downloading redis-8.1.0-py3-none-any.whl (560 kB)
+#10 41.14    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 560.6/560.6 kB 1.7 MB/s eta 0:00:00
+#10 41.27 Downloading httpx-0.28.1-py3-none-any.whl (73 kB)
+#10 41.34    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 73.5/73.5 kB 15.6 MB/s eta 0:00:00
+#10 41.48 Downloading httpcore-1.0.9-py3-none-any.whl (78 kB)
+#10 41.56    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 78.8/78.8 kB 854.6 kB/s eta 0:00:00
+#10 41.69 Downloading annotated_doc-0.0.5-py3-none-any.whl (5.3 kB)
+#10 41.99 Downloading anyio-4.16.0-py3-none-any.whl (134 kB)
+#10 41.99    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 134.5/134.5 kB 26.7 MB/s eta 0:00:00
+#10 42.13 Downloading billiard-4.3.2-py3-none-any.whl (90 kB)
+#10 42.26    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 90.6/90.6 kB 12.8 MB/s eta 0:00:00
+#10 42.39 Downloading click-8.5.1-py3-none-any.whl (126 kB)
+#10 42.47    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 126.2/126.2 kB 15.4 MB/s eta 0:00:00
+#10 42.60 Downloading click_didyoumean-0.3.1-py3-none-any.whl (3.6 kB)
+#10 42.80 Downloading click_plugins-1.1.1.2-py2.py3-none-any.whl (11 kB)
+#10 42.93 Downloading click_repl-0.4.1-py3-none-any.whl (14 kB)
+#10 43.25 Downloading h11-0.16.0-py3-none-any.whl (37 kB)
+#10 43.51 Downloading httpx2-2.16.0-py3-none-any.whl (97 kB)
+#10 43.58    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 97.9/97.9 kB 1.3 MB/s eta 0:00:00
+#10 43.71 Downloading httpcore2-2.16.0-py3-none-any.whl (85 kB)
+#10 43.84    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 85.1/85.1 kB 583.0 kB/s eta 0:00:00
+#10 43.97 Downloading idna-3.20-py3-none-any.whl (69 kB)
+#10 44.14    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 69.6/69.6 kB 567.5 kB/s eta 0:00:00
+#10 44.28 Downloading jiter-0.19.0-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (337 kB)
+#10 44.43    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 337.1/337.1 kB 4.1 MB/s eta 0:00:00
+#10 44.57 Downloading kombu-5.7.0-py3-none-any.whl (266 kB)
+#10 44.78    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 266.6/266.6 kB 1.2 MB/s eta 0:00:00
+#10 44.98 Downloading vine-5.1.0-py3-none-any.whl (9.6 kB)
+#10 45.11 Downloading matplotlib-3.11.2-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (9.9 MB)
+#10 46.29    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 9.9/9.9 MB 8.9 MB/s eta 0:00:00
+#10 46.48 Downloading nvidia_ml_py-13.615.71-py3-none-any.whl (58 kB)
+#10 46.49    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 58.1/58.1 kB 21.6 MB/s eta 0:00:00
+#10 46.63 Downloading opencv_python-5.0.0.93-cp37-abi3-manylinux_2_28_x86_64.whl (73.8 MB)
+#10 54.63    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 73.8/73.8 MB 10.1 MB/s eta 0:00:00
+#10 54.77 Downloading opentelemetry_api-1.45.2-py3-none-any.whl (60 kB)
+#10 54.89    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 60.3/60.3 kB 851.1 kB/s eta 0:00:00
+#10 55.02 Downloading polars-2.1.0-py3-none-any.whl (911 kB)
+#10 55.38    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 911.5/911.5 kB 2.5 MB/s eta 0:00:00
+#10 55.52 Downloading polars_runtime_32-2.1.0-cp311-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (53.9 MB)
+#10 92.24    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 53.9/53.9 MB 2.5 MB/s eta 0:00:00
+#10 92.37 Downloading psutil-7.2.2-cp36-abi3-manylinux2010_x86_64.manylinux_2_12_x86_64.manylinux_2_28_x86_64.whl (155 kB)
+#10 92.50    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 155.6/155.6 kB 2.3 MB/s eta 0:00:00
+#10 92.63 Downloading pydantic-2.14.3-py3-none-any.whl (494 kB)
+#10 92.94    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 494.1/494.1 kB 2.0 MB/s eta 0:00:00
+#10 93.07 Downloading pydantic_core-2.50.4-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (2.3 MB)
+#10 94.25    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.3/2.3 MB 2.0 MB/s eta 0:00:00
+#10 94.38 Downloading requests-2.34.2-py3-none-any.whl (73 kB)
+#10 94.57    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 73.1/73.1 kB 507.6 kB/s eta 0:00:00
+#10 94.70 Downloading certifi-2026.10.23-py3-none-any.whl (135 kB)
+#10 94.81    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 135.1/135.1 kB 3.5 MB/s eta 0:00:00
+#10 95.00 Downloading starlette-1.10.0-py3-none-any.whl (80 kB)
+#10 95.02    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 80.6/80.6 kB 3.0 MB/s eta 0:00:00
+#10 95.16 Downloading typing_inspection-0.4.5-py3-none-any.whl (14 kB)
+#10 95.30 Downloading ultralytics_platform-0.1.107-py3-none-any.whl (102 kB)
+#10 95.44    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 102.3/102.3 kB 8.0 MB/s eta 0:00:00
+#10 95.57 Downloading ultralytics_thop-2.2.5-py3-none-any.whl (32 kB)
+#10 95.78 Downloading sniffio-1.3.1-py3-none-any.whl (10 kB)
+#10 95.91 Downloading tzlocal-5.4.5-py3-none-any.whl (18 kB)
+#10 96.19 Downloading amqp-5.4.2-py3-none-any.whl (51 kB)
+#10 96.28    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 52.0/52.0 kB 1.9 MB/s eta 0:00:00
+#10 96.41 Downloading annotated_types-0.8.0-py3-none-any.whl (13 kB)
+#10 96.55 Downloading charset_normalizer-3.5.2-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (269 kB)
+#10 96.77    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 270.0/270.0 kB 1.2 MB/s eta 0:00:00
+#10 97.00 Downloading contourpy-1.3.3-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (355 kB)
+#10 97.28    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 355.2/355.2 kB 1.6 MB/s eta 0:00:00
+#10 97.41 Downloading cycler-0.12.1-py3-none-any.whl (8.3 kB)
+#10 97.69 Downloading fonttools-4.68.0-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (5.5 MB)
+#10 101.3    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 5.5/5.5 MB 1.5 MB/s eta 0:00:00
+#10 101.5 Downloading kiwisolver-1.5.1-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (1.4 MB)
+#10 102.9    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.4/1.4 MB 1.0 MB/s eta 0:00:00
+#10 103.0 Downloading prompt_toolkit-3.0.53-py3-none-any.whl (392 kB)
+#10 103.4    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 392.3/392.3 kB 1.0 MB/s eta 0:00:00
+#10 103.5 Downloading pyparsing-3.3.3-py3-none-any.whl (126 kB)
+#10 103.7    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 126.4/126.4 kB 1.3 MB/s eta 0:00:00
+#10 103.8 Downloading six-1.17.0-py2.py3-none-any.whl (11 kB)
+#10 104.0 Downloading truststore-0.10.5-py3-none-any.whl (19 kB)
+#10 104.2 Downloading urllib3-2.8.0-py3-none-any.whl (135 kB)
+#10 104.3    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 135.7/135.7 kB 1.5 MB/s eta 0:00:00
+#10 104.5 Downloading wcwidth-0.9.4-cp310-abi3-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (785 kB)
+#10 105.1    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 785.9/785.9 kB 1.2 MB/s eta 0:00:00
+#10 105.5 Installing collected packages: nvidia-ml-py, wcwidth, vine, urllib3, tzlocal, typing-inspection, truststore, SQLAlchemy, sniffio, six, redis, python-multipart, python-dotenv, pyparsing, PyJWT, pydantic-core, psutil, polars-runtime-32, pi-heif, opentelemetry-api, opencv-python-headless, opencv-python, kiwisolver, jiter, idna, h11, fonttools, cycler, contourpy, click, charset_normalizer, certifi, billiard, annotated-types, annotated-doc, uvicorn, requests, python-dateutil, pydantic, prompt_toolkit, polars, httpcore2, httpcore, click-plugins, click-didyoumean, anyio, amqp, ultralytics-thop, starlette, matplotlib, kombu, httpx2, httpx, click-repl, ultralytics-platform, openai, fastapi, celery, ultralytics
+#10 112.2 Successfully installed PyJWT-2.15.1 SQLAlchemy-2.1.8 amqp-5.4.2 annotated-doc-0.0.5 annotated-types-0.8.0 anyio-4.16.0 billiard-4.3.2 celery-5.7.0 certifi-2026.10.23 charset_normalizer-3.5.2 click-8.5.1 click-didyoumean-0.3.1 click-plugins-1.1.1.2 click-repl-0.4.1 contourpy-1.3.3 cycler-0.12.1 fastapi-0.162.2 fonttools-4.68.0 h11-0.16.0 httpcore-1.0.9 httpcore2-2.16.0 httpx-0.28.1 httpx2-2.16.0 idna-3.20 jiter-0.19.0 kiwisolver-1.5.1 kombu-5.7.0 matplotlib-3.11.2 nvidia-ml-py-13.615.71 openai-3.46.0 opencv-python-5.0.0.93 opencv-python-headless-5.0.0.93 opentelemetry-api-1.45.2 pi-heif-1.4.0 polars-2.1.0 polars-runtime-32-2.1.0 prompt_toolkit-3.0.53 psutil-7.2.2 pydantic-2.14.3 pydantic-core-2.50.4 pyparsing-3.3.3 python-dateutil-2.9.0.post0 python-dotenv-1.2.4 python-multipart-0.0.33 redis-8.1.0 requests-2.34.2 six-1.17.0 sniffio-1.3.1 starlette-1.10.0 truststore-0.10.5 typing-inspection-0.4.5 tzlocal-5.4.5 ultralytics-8.4.208 ultralytics-platform-0.1.107 ultralytics-thop-2.2.5 urllib3-2.8.0 uvicorn-0.54.0 vine-5.1.0 wcwidth-0.9.4
+#10 112.2 WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv
+#10 112.6 
+#10 112.6 [notice] A new release of pip is available: 24.0 -> 26.3
+#10 112.6 [notice] To update, run: pip install --upgrade pip
+#10 DONE 113.6s
+
+#11 [7/7] COPY . .
+#11 DONE 0.1s
+
+#12 exporting to image
+#12 exporting layers
+#12 exporting layers 11.6s done
+#12 exporting manifest sha256:ce90d58c5a30d6ab2d1aecbc621d498ba24610c0c6567306252587da8052f5d4 done
+#12 exporting config sha256:e3e9afaf41362cd9def2c197f3c1df207f5b1985a64f9ce2631df5a3a68f3bcc done
+#12 exporting attestation manifest sha256:1462c10dc30f5165a16eb2fea59dde7d399095c0713a6d5f541a0effef79e2f4 done
+#12 exporting manifest list sha256:b6b5fb88e711644b6818f9abd42c3aa379fa86eddf477878c242ec768a0bbcd8 done
+#12 naming to docker.io/library/vision-stage3:local done
+#12 unpacking to docker.io/library/vision-stage3:local
+#12 unpacking to docker.io/library/vision-stage3:local 2.0s done
+#12 DONE 13.6s

@@ -2,7 +2,7 @@
 
 浏览器原生 HTML/JavaScript → FastAPI → SQLAlchemy/SQLite → Redis/Celery → 第二阶段 YOLO 和 Ollama Qwen3-VL → SQLite → 受 JWT 保护的结果与图片接口。
 
-`TASK_MODE=celery` 是默认模式。API 投递一次双模型工作流，worker 并发 1、预取 1，两模型串行调用。`TASK_MODE=local` 是显式本机实践模式，后台线程使用全局锁串行运行，页面显示此模式。本机六图验收为 local，不能当作 Redis/Celery 实际服务验证。
+`TASK_MODE=celery` 是默认模式。API 投递一次双模型工作流，worker 并发 1、预取 1，两模型串行调用。`TASK_MODE=local` 是显式本机实践模式，后台线程使用全局锁串行运行，页面显示此模式。2026-11-08 六图验收为 local；2026-11-09 新增 WSL2 Ubuntu + Docker Desktop 六图真实验收，实际使用 Redis/Celery，详见本轮容器验收报告。
 
 上传验证 MIME 和实际可解码格式，限 10MB。SHA-256 文件名、请求哈希、任务记录三者绑定。执行前每个模型重新检查文件哈希。原始模型结果先保存，再校验。失败模型的 counts 不进入比较，成功模型保留。
 

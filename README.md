@@ -31,7 +31,7 @@ Ollama 必须提前运行并具有 qwen3-vl:4b。YOLO 权重为仓库原 yolo11n
 
 ## 队列实践
 
-默认 celery 模式需要真实 Redis。当前本机未安装可运行的 Redis、WSL Linux 或 Docker，因此下面启动组合待环境验证。
+默认 celery 模式需要真实 Redis。本机已有 WSL2 Ubuntu 和 Docker Desktop；优先使用 Compose 同时启动 Redis、API、worker 和 Nginx。Windows 独立 Redis/solo 组合仅保留为参考。
 
 ```powershell
 # 先启动 Redis，确认 PING/PONG
@@ -57,4 +57,4 @@ $env:PLAYWRIGHT_BROWSERS_PATH='D:\后端_test\.browser-runtime'
 
 真实回归脚本用本机 Edge、临时凭据和独立 SQLite 启动 local 模式服务，经浏览器真实上传、推理和刷新恢复，产生截图、原始响应、任务 JSON 与真实 WebM 录像。它不证明 Redis/Celery 消费。证据路径见 docs/最终考核验收报告.md。
 
-Docker/Linux 命令尚未执行，详见 docs/Linux服务器部署指南.md。代码目录为 src、frontend、scripts、tests、deploy、docs。data/uploads 和 data/stage3.db 为运行数据，results 为原始模型和验收证据，均不会提交到 Git。
+本轮 WSL2 + Docker Desktop 的操作步骤、录屏脚本见 [WSL2本机部署与录屏](docs/WSL2本机部署与录屏.md)，实际结果见 [本轮容器验收](docs/本轮容器验收.md)。远程云服务器不属于本轮范围。代码目录为 src、frontend、scripts、tests、deploy、docs。data/uploads 和 data/stage3.db 为运行数据，results 为原始模型和验收证据，均不会提交到 Git。

@@ -1,0 +1,725 @@
+{
+  "commit": "404481424035ed710b2728a096258f0465cb015b",
+  "diff_sha256": "5e3568d5f8d4021cd5573890956129c6574e6b05894a1d9c12069c781e3f8175",
+  "deployment": "WSL2 Ubuntu + Docker Desktop",
+  "yolo_weights_sha256": "0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1",
+  "url": "http://127.0.0.1:8080",
+  "tasks": [
+    {
+      "task_id": "5e166535-b713-4ec0-8c25-5e8a07f7b786",
+      "status": "success",
+      "image_sha256": "d105999d32b86c1c3e3d9535708d7ba147fd5d481311df38d166820435d86cb2",
+      "yolo_status": "success",
+      "vlm_status": "success",
+      "yolo": {
+        "image_id": "5e166535-b713-4ec0-8c25-5e8a07f7b786",
+        "method": "YOLO",
+        "model": "yolo11n.pt",
+        "objects": [
+          {
+            "name": "mouse",
+            "count": 1,
+            "confidence": 0.9404,
+            "bbox": [
+              1229.72,
+              617.8,
+              1581.92,
+              1203.17
+            ]
+          },
+          {
+            "name": "book",
+            "count": 1,
+            "confidence": 0.851,
+            "bbox": [
+              3.17,
+              161.88,
+              1262.64,
+              1278.42
+            ]
+          },
+          {
+            "name": "cup",
+            "count": 1,
+            "confidence": 0.8188,
+            "bbox": [
+              750.09,
+              0.14,
+              1159.08,
+              407.35
+            ]
+          },
+          {
+            "name": "mouse",
+            "count": 1,
+            "confidence": 0.4466,
+            "bbox": [
+              1187.2,
+              262.83,
+              1399.9,
+              483.33
+            ]
+          }
+        ],
+        "counts": {
+          "mouse": 2,
+          "book": 1,
+          "cup": 1
+        },
+        "runtime_seconds": 0.7325,
+        "error": null
+      },
+      "vlm": {
+        "image_id": "5e166535-b713-4ec0-8c25-5e8a07f7b786",
+        "method": "VLM",
+        "model": "qwen3-vl:4b",
+        "objects": [
+          {
+            "name": "textbook",
+            "count": 1,
+            "uncertain": false
+          },
+          {
+            "name": "bottle",
+            "count": 1,
+            "uncertain": false
+          },
+          {
+            "name": "earbuds case",
+            "count": 1,
+            "uncertain": false
+          },
+          {
+            "name": "mouse",
+            "count": 1,
+            "uncertain": false
+          }
+        ],
+        "counts": {
+          "textbook": 1,
+          "bottle": 1,
+          "earbuds case": 1,
+          "mouse": 1
+        },
+        "runtime_seconds": 16.6137,
+        "done": true,
+        "done_reason": "stop",
+        "raw_content_length": 204,
+        "error": null,
+        "attempts": [
+          {
+            "attempt": 1,
+            "status": "verified",
+            "error_type": null,
+            "done_reason": "stop",
+            "raw_content_length": 204
+          }
+        ]
+      },
+      "comparison": {
+        "image_id": "5e166535-b713-4ec0-8c25-5e8a07f7b786",
+        "yolo_status": "success",
+        "vlm_status": "verified",
+        "yolo_counts": {
+          "mouse": 2,
+          "book": 1,
+          "cup": 1
+        },
+        "vlm_counts": {
+          "textbook": 1,
+          "bottle": 1,
+          "earbuds case": 1,
+          "mouse": 1
+        },
+        "yolo_runtime_seconds": 0.7325,
+        "vlm_runtime_seconds": 16.6137,
+        "vlm_error": null,
+        "vlm_answer_source": null
+      },
+      "error": null,
+      "note": "",
+      "created_at": "2026-11-09T03:22:43.260889",
+      "source_image_id": "D001"
+    },
+    {
+      "task_id": "b4a1c865-0f17-4368-bf40-e4fcdad9b4c0",
+      "status": "success",
+      "image_sha256": "d9297eb209859ba942f3846ed9d5258f63020eafa066a9820628f99e5549ae4e",
+      "yolo_status": "success",
+      "vlm_status": "success",
+      "yolo": {
+        "image_id": "b4a1c865-0f17-4368-bf40-e4fcdad9b4c0",
+        "method": "YOLO",
+        "model": "yolo11n.pt",
+        "objects": [
+          {
+            "name": "mouse",
+            "count": 1,
+            "confidence": 0.8852,
+            "bbox": [
+              1339.56,
+              547.87,
+              1648.6,
+              1087.25
+            ]
+          },
+          {
+            "name": "mouse",
+            "count": 1,
+            "confidence": 0.8185,
+            "bbox": [
+              1317.81,
+              139.75,
+              1536.05,
+              387.6
+            ]
+          },
+          {
+            "name": "mouse",
+            "count": 1,
+            "confidence": 0.8,
+            "bbox": [
+              113.43,
+              106.16,
+              475.49,
+              591.52
+            ]
+          },
+          {
+            "name": "book",
+            "count": 1,
+            "confidence": 0.3119,
+            "bbox": [
+              432.9,
+              97.98,
+              1343.42,
+              1280
+            ]
+          }
+        ],
+        "counts": {
+          "mouse": 3,
+          "book": 1
+        },
+        "runtime_seconds": 0.0716,
+        "error": null
+      },
+      "vlm": {
+        "image_id": "b4a1c865-0f17-4368-bf40-e4fcdad9b4c0",
+        "method": "VLM",
+        "model": "qwen3-vl:4b",
+        "objects": [
+          {
+            "name": "textbook",
+            "count": 1,
+            "uncertain": false
+          },
+          {
+            "name": "power bank",
+            "count": 1,
+            "uncertain": false
+          },
+          {
+            "name": "wireless earbuds case",
+            "count": 1,
+            "uncertain": false
+          },
+          {
+            "name": "mouse",
+            "count": 1,
+            "uncertain": false
+          }
+        ],
+        "counts": {
+          "textbook": 1,
+          "power bank": 1,
+          "wireless earbuds case": 1,
+          "mouse": 1
+        },
+        "runtime_seconds": 9.4398,
+        "done": true,
+        "done_reason": "stop",
+        "raw_content_length": 226,
+        "error": null,
+        "attempts": [
+          {
+            "attempt": 1,
+            "status": "verified",
+            "error_type": null,
+            "done_reason": "stop",
+            "raw_content_length": 226
+          }
+        ]
+      },
+      "comparison": {
+        "image_id": "b4a1c865-0f17-4368-bf40-e4fcdad9b4c0",
+        "yolo_status": "success",
+        "vlm_status": "verified",
+        "yolo_counts": {
+          "mouse": 3,
+          "book": 1
+        },
+        "vlm_counts": {
+          "textbook": 1,
+          "power bank": 1,
+          "wireless earbuds case": 1,
+          "mouse": 1
+        },
+        "yolo_runtime_seconds": 0.0716,
+        "vlm_runtime_seconds": 9.4398,
+        "vlm_error": null,
+        "vlm_answer_source": null
+      },
+      "error": null,
+      "note": "",
+      "created_at": "2026-11-09T03:23:03.045930",
+      "source_image_id": "D002"
+    },
+    {
+      "task_id": "f69227e3-cfae-4aa9-9eb7-84b432413e52",
+      "status": "success",
+      "image_sha256": "79ba20a67e32ec34a675b3d3b289369887ca8009beff41cb7055ba2de8547fcb",
+      "yolo_status": "success",
+      "vlm_status": "success",
+      "yolo": {
+        "image_id": "f69227e3-cfae-4aa9-9eb7-84b432413e52",
+        "method": "YOLO",
+        "model": "yolo11n.pt",
+        "objects": [
+          {
+            "name": "mouse",
+            "count": 1,
+            "confidence": 0.876,
+            "bbox": [
+              1284.31,
+              487.54,
+              1618.33,
+              1074.49
+            ]
+          },
+          {
+            "name": "mouse",
+            "count": 1,
+            "confidence": 0.4793,
+            "bbox": [
+              406.84,
+              385.24,
+              1111.89,
+              1018.7
+            ]
+          },
+          {
+            "name": "cell phone",
+            "count": 1,
+            "confidence": 0.4199,
+            "bbox": [
+              405.76,
+              384.16,
+              1113.95,
+              1015.48
+            ]
+          }
+        ],
+        "counts": {
+          "mouse": 2,
+          "cell phone": 1
+        },
+        "runtime_seconds": 0.0686,
+        "error": null
+      },
+      "vlm": {
+        "image_id": "f69227e3-cfae-4aa9-9eb7-84b432413e52",
+        "method": "VLM",
+        "model": "qwen3-vl:4b",
+        "objects": [
+          {
+            "name": "textbook",
+            "count": 1,
+            "uncertain": false
+          },
+          {
+            "name": "earbuds case",
+            "count": 1,
+            "uncertain": false
+          },
+          {
+            "name": "mouse",
+            "count": 1,
+            "uncertain": false
+          },
+          {
+            "name": "external storage",
+            "count": 1,
+            "uncertain": false
+          }
+        ],
+        "counts": {
+          "textbook": 1,
+          "earbuds case": 1,
+          "mouse": 1,
+          "external storage": 1
+        },
+        "runtime_seconds": 8.4378,
+        "done": true,
+        "done_reason": "stop",
+        "raw_content_length": 214,
+        "error": null,
+        "attempts": [
+          {
+            "attempt": 1,
+            "status": "verified",
+            "error_type": null,
+            "done_reason": "stop",
+            "raw_content_length": 214
+          }
+        ]
+      },
+      "comparison": {
+        "image_id": "f69227e3-cfae-4aa9-9eb7-84b432413e52",
+        "yolo_status": "success",
+        "vlm_status": "verified",
+        "yolo_counts": {
+          "mouse": 2,
+          "cell phone": 1
+        },
+        "vlm_counts": {
+          "textbook": 1,
+          "earbuds case": 1,
+          "mouse": 1,
+          "external storage": 1
+        },
+        "yolo_runtime_seconds": 0.0686,
+        "vlm_runtime_seconds": 8.4378,
+        "vlm_error": null,
+        "vlm_answer_source": null
+      },
+      "error": null,
+      "note": "",
+      "created_at": "2026-11-09T03:23:14.203224",
+      "source_image_id": "D003"
+    },
+    {
+      "task_id": "7c2e15c4-f69e-4f05-aca2-d3e0100b810c",
+      "status": "success",
+      "image_sha256": "a2464fb16dc731a5860bc408094d04dd79f702c067d76ae93315eefe16677881",
+      "yolo_status": "success",
+      "vlm_status": "success",
+      "yolo": {
+        "image_id": "7c2e15c4-f69e-4f05-aca2-d3e0100b810c",
+        "method": "YOLO",
+        "model": "yolo11n.pt",
+        "objects": [
+          {
+            "name": "person",
+            "count": 1,
+            "confidence": 0.7402,
+            "bbox": [
+              994.44,
+              718.67,
+              1195.91,
+              1199.52
+            ]
+          },
+          {
+            "name": "book",
+            "count": 1,
+            "confidence": 0.4032,
+            "bbox": [
+              16.11,
+              1.57,
+              1274.26,
+              1698.92
+            ]
+          }
+        ],
+        "counts": {
+          "person": 1,
+          "book": 1
+        },
+        "runtime_seconds": 0.0862,
+        "error": null
+      },
+      "vlm": {
+        "image_id": "7c2e15c4-f69e-4f05-aca2-d3e0100b810c",
+        "method": "VLM",
+        "model": "qwen3-vl:4b",
+        "objects": [
+          {
+            "name": "textbook",
+            "count": 1,
+            "uncertain": false
+          },
+          {
+            "name": "notebook",
+            "count": 1,
+            "uncertain": false
+          }
+        ],
+        "counts": {
+          "textbook": 1,
+          "notebook": 1
+        },
+        "runtime_seconds": 7.4526,
+        "done": true,
+        "done_reason": "stop",
+        "raw_content_length": 109,
+        "error": null,
+        "attempts": [
+          {
+            "attempt": 1,
+            "status": "verified",
+            "error_type": null,
+            "done_reason": "stop",
+            "raw_content_length": 109
+          }
+        ]
+      },
+      "comparison": {
+        "image_id": "7c2e15c4-f69e-4f05-aca2-d3e0100b810c",
+        "yolo_status": "success",
+        "vlm_status": "verified",
+        "yolo_counts": {
+          "person": 1,
+          "book": 1
+        },
+        "vlm_counts": {
+          "textbook": 1,
+          "notebook": 1
+        },
+        "yolo_runtime_seconds": 0.0862,
+        "vlm_runtime_seconds": 7.4526,
+        "vlm_error": null,
+        "vlm_answer_source": null
+      },
+      "error": null,
+      "note": "",
+      "created_at": "2026-11-09T03:23:24.143983",
+      "source_image_id": "D004"
+    },
+    {
+      "task_id": "c0f19828-2dec-44ea-adf4-8c1fca4625d1",
+      "status": "success",
+      "image_sha256": "d67271d2aa695084b4830d36b1508c56e69919650d7e38a587411af122c22d5b",
+      "yolo_status": "success",
+      "vlm_status": "success",
+      "yolo": {
+        "image_id": "c0f19828-2dec-44ea-adf4-8c1fca4625d1",
+        "method": "YOLO",
+        "model": "yolo11n.pt",
+        "objects": [
+          {
+            "name": "book",
+            "count": 1,
+            "confidence": 0.682,
+            "bbox": [
+              805.64,
+              65.23,
+              1656.4,
+              1210.2
+            ]
+          }
+        ],
+        "counts": {
+          "book": 1
+        },
+        "runtime_seconds": 0.0664,
+        "error": null
+      },
+      "vlm": {
+        "image_id": "c0f19828-2dec-44ea-adf4-8c1fca4625d1",
+        "method": "VLM",
+        "model": "qwen3-vl:4b",
+        "objects": [
+          {
+            "name": "pens",
+            "count": 7,
+            "uncertain": false
+          },
+          {
+            "name": "tape dispenser",
+            "count": 1,
+            "uncertain": false
+          },
+          {
+            "name": "book",
+            "count": 1,
+            "uncertain": false
+          }
+        ],
+        "counts": {
+          "pens": 7,
+          "tape dispenser": 1,
+          "book": 1
+        },
+        "runtime_seconds": 21.9274,
+        "done": true,
+        "done_reason": "stop",
+        "raw_content_length": 155,
+        "error": null,
+        "attempts": [
+          {
+            "attempt": 1,
+            "status": "verified",
+            "error_type": null,
+            "done_reason": "stop",
+            "raw_content_length": 155
+          }
+        ]
+      },
+      "comparison": {
+        "image_id": "c0f19828-2dec-44ea-adf4-8c1fca4625d1",
+        "yolo_status": "success",
+        "vlm_status": "verified",
+        "yolo_counts": {
+          "book": 1
+        },
+        "vlm_counts": {
+          "pens": 7,
+          "tape dispenser": 1,
+          "book": 1
+        },
+        "yolo_runtime_seconds": 0.0664,
+        "vlm_runtime_seconds": 21.9274,
+        "vlm_error": null,
+        "vlm_answer_source": null
+      },
+      "error": null,
+      "note": "",
+      "created_at": "2026-11-09T03:23:32.838214",
+      "source_image_id": "D005"
+    },
+    {
+      "task_id": "5c45b369-eb64-478b-9557-de22f537ee7d",
+      "status": "success",
+      "image_sha256": "34431e1f8b8569c2614d29db0ee20008b97cac50be5935cd9b883f09d03ece13",
+      "yolo_status": "success",
+      "vlm_status": "success",
+      "yolo": {
+        "image_id": "5c45b369-eb64-478b-9557-de22f537ee7d",
+        "method": "YOLO",
+        "model": "yolo11n.pt",
+        "objects": [
+          {
+            "name": "mouse",
+            "count": 1,
+            "confidence": 0.95,
+            "bbox": [
+              1538.77,
+              684.29,
+              1862.99,
+              1250.34
+            ]
+          },
+          {
+            "name": "keyboard",
+            "count": 1,
+            "confidence": 0.833,
+            "bbox": [
+              237.9,
+              626.71,
+              1504.32,
+              1280
+            ]
+          },
+          {
+            "name": "laptop",
+            "count": 1,
+            "confidence": 0.6679,
+            "bbox": [
+              230.98,
+              0,
+              1495.32,
+              1269.46
+            ]
+          },
+          {
+            "name": "tv",
+            "count": 1,
+            "confidence": 0.6057,
+            "bbox": [
+              246.88,
+              3.08,
+              1472.71,
+              646.21
+            ]
+          }
+        ],
+        "counts": {
+          "mouse": 1,
+          "keyboard": 1,
+          "laptop": 1,
+          "tv": 1
+        },
+        "runtime_seconds": 0.081,
+        "error": null
+      },
+      "vlm": {
+        "image_id": "5c45b369-eb64-478b-9557-de22f537ee7d",
+        "method": "VLM",
+        "model": "qwen3-vl:4b",
+        "objects": [
+          {
+            "name": "tablet",
+            "count": 1,
+            "uncertain": false
+          },
+          {
+            "name": "keyboard",
+            "count": 1,
+            "uncertain": false
+          },
+          {
+            "name": "mouse",
+            "count": 1,
+            "uncertain": false
+          }
+        ],
+        "counts": {
+          "tablet": 1,
+          "keyboard": 1,
+          "mouse": 1
+        },
+        "runtime_seconds": 4.5104,
+        "done": true,
+        "done_reason": "stop",
+        "raw_content_length": 152,
+        "error": null,
+        "attempts": [
+          {
+            "attempt": 1,
+            "status": "verified",
+            "error_type": null,
+            "done_reason": "stop",
+            "raw_content_length": 152
+          }
+        ]
+      },
+      "comparison": {
+        "image_id": "5c45b369-eb64-478b-9557-de22f537ee7d",
+        "yolo_status": "success",
+        "vlm_status": "verified",
+        "yolo_counts": {
+          "mouse": 1,
+          "keyboard": 1,
+          "laptop": 1,
+          "tv": 1
+        },
+        "vlm_counts": {
+          "tablet": 1,
+          "keyboard": 1,
+          "mouse": 1
+        },
+        "yolo_runtime_seconds": 0.081,
+        "vlm_runtime_seconds": 4.5104,
+        "vlm_error": null,
+        "vlm_answer_source": null
+      },
+      "error": null,
+      "note": "",
+      "created_at": "2026-11-09T03:23:56.052927",
+      "source_image_id": "D006"
+    }
+  ],
+  "restart_verified": true,
+  "unauthorized_rejected": true
+}
