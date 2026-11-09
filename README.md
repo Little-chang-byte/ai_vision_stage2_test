@@ -57,4 +57,13 @@ $env:PLAYWRIGHT_BROWSERS_PATH='D:\后端_test\.browser-runtime'
 
 真实回归脚本用本机 Edge、临时凭据和独立 SQLite 启动 local 模式服务，经浏览器真实上传、推理和刷新恢复，产生截图、原始响应、任务 JSON 与真实 WebM 录像。它不证明 Redis/Celery 消费。证据路径见 docs/最终考核验收报告.md。
 
-本轮 WSL2 + Docker Desktop 的操作步骤、录屏脚本见 [WSL2本机部署与录屏](docs/WSL2本机部署与录屏.md)，实际结果见 [本轮容器验收](docs/本轮容器验收.md)。远程云服务器不属于本轮范围。代码目录为 src、frontend、scripts、tests、deploy、docs。data/uploads 和 data/stage3.db 为运行数据，results 为原始模型和验收证据，均不会提交到 Git。
+本轮 WSL2 + Docker Desktop 的演示见 [屏幕录制](屏幕录制%202026-11-09%20123644.mp4)。远程云服务器不属于本轮范围。代码目录为 src、frontend、scripts、tests、deploy、docs。data/uploads 和 data/stage3.db 为运行数据，results 为原始模型和验收证据，均不会提交到 Git。
+
+
+## 本次交付材料
+
+- [项目说明与个人感悟](项目说明与个人感悟.md)
+- [最终考核验收报告](最终考核验收报告.md)
+- [AI 辅助开发记录](docs/AI辅助开发记录.md)
+
+本轮按本人整理的目录提交，已移除的旧材料仍可通过 Git 历史查阅。
