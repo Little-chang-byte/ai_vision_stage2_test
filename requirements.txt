@@ -1,6 +1,7 @@
 ultralytics
 opencv-python-headless
 Pillow
+pi-heif
 python-dotenv
 openai
 fastapi

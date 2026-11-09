@@ -1,5 +1,6 @@
 .git
 .env
+.env.*
 __pycache__
 *.pyc
 results
@@ -9,3 +10,5 @@ tests
 
 tmp
 yolo11n.pt
+deliverables
+docs/evidence
